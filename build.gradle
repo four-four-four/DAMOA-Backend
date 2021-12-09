@@ -17,9 +17,14 @@ dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.25'
 	implementation 'org.apache.commons:commons-dbcp2:2.8.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.5.1'
+	implementation 'org.projectlombok:lombok'
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	annotationProcessor('org.projectlombok:lombok')
+	testAnnotationProcessor('org.projectlombok:lombok')
 }
+
 
 test {
 	useJUnitPlatform()
