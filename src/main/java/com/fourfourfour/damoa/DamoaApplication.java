@@ -1,4 +1,4 @@
-package com.damoa;
+package com.fourfourfour.damoa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
