@@ -107,4 +107,20 @@ public class JdbcUserDaoImpl implements UserDao {
         return resultEmail;
     }
 
+    @Override
+    public List<String> selectByNickname(String userNickname) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("select user_nickname from").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("where user_nickname = ?");
+        List<String> resultNickname = jdbcTemplate.query(sql.toString(), new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("user_nickname");
+            }
+        }, userNickname);
+
+        return resultNickname;
+    }
 }
