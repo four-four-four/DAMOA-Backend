@@ -61,4 +61,32 @@ public class JdbcUserDaoImpl implements UserDao {
 
         jdbcTemplate.update(sql.toString());
     }
+
+    @Override
+    public void insertUser(UserDto user) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("insert into").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("(" +
+                        "user_email, user_pw, user_nickname, " +
+                        "user_gender, user_birth_date, user_job, " +
+                        "user_service_agree, user_privacy_agree, user_location_agree, user_promotion_agree)").append(" ")
+                .append("values").append(" ")
+                .append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        jdbcTemplate.update(sql.toString(),
+                user.getUserEmail(),
+                user.getUserPw(),
+                user.getUserNickname(),
+                user.getUserGender(),
+                user.getUserBirthDate(),
+                user.getUserJob(),
+                user.isUserServiceAgree(),
+                user.isUserPrivacyAgree(),
+                user.isUserLocationAgree(),
+                user.isUserPromotionAgree()
+        );
+    }
+
 }
