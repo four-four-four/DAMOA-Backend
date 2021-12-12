@@ -23,4 +23,9 @@ public class UserServiceImpl implements UserService {
         userDao.deleteAll();
     }
 
+    @Override
+    public void register(UserDto user) {
+        userDao.insertUser(user);
+    }
+
 }
