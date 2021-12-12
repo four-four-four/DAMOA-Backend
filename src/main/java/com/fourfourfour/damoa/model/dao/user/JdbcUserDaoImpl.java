@@ -89,4 +89,22 @@ public class JdbcUserDaoImpl implements UserDao {
         );
     }
 
+    @Override
+    public List<String> selectEmailByEmail(String userEmail) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("select user_email from").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("where user_email = ?");
+
+        List<String> resultEmail = jdbcTemplate.query(sql.toString(), new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("user_email");
+            }
+        },userEmail);
+
+        return resultEmail;
+    }
+
 }
