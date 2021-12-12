@@ -28,4 +28,17 @@ public class UserServiceImpl implements UserService {
         userDao.insertUser(user);
     }
 
+    @Override
+    public boolean emailDulicationCheck(String userEmail) {
+
+        List<String> resultEmail = userDao.selectEmailByEmail(userEmail);
+
+        if (resultEmail.isEmpty()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
