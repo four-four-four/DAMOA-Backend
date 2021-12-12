@@ -41,4 +41,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public boolean nicknameDuplicationCheck(String userNickname) {
+
+        List<String> resultNickname = userDao.selectByNickname(userNickname);
+
+        if (resultNickname.isEmpty()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }
