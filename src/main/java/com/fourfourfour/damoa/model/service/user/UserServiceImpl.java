@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean emailDulicationCheck(String userEmail) {
+    public boolean emailDuplicationCheck(String userEmail) {
 
         List<String> resultEmail = userDao.selectEmailByEmail(userEmail);
 
