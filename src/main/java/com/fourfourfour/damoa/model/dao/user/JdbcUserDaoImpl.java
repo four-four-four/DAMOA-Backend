@@ -2,6 +2,7 @@ package com.fourfourfour.damoa.model.dao.user;
 
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -90,37 +91,42 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<String> selectEmailByEmail(String userEmail) {
+    public String selectEmailByEmail(String userEmail) {
         StringBuilder sql = new StringBuilder();
         sql
                 .append("SELECT user_email FROM").append(" ")
                 .append(TABLE_NAME).append(" ")
                 .append("WHERE user_email = ?");
 
-        List<String> resultEmail = jdbcTemplate.query(sql.toString(), new RowMapper<String>() {
-            @Override
-            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getString("user_email");
-            }
-        },userEmail);
-
-        return resultEmail;
+        try {
+            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString("user_email");
+                }
+            }, userEmail);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
-    public List<String> selectByNickname(String userNickname) {
+    public String selectByNickname(String userNickname) {
         StringBuilder sql = new StringBuilder();
         sql
                 .append("SELECT user_nickname FROM").append(" ")
                 .append(TABLE_NAME).append(" ")
                 .append("WHERE user_nickname = ?");
-        List<String> resultNickname = jdbcTemplate.query(sql.toString(), new RowMapper<String>() {
-            @Override
-            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return rs.getString("user_nickname");
-            }
-        }, userNickname);
 
-        return resultNickname;
+        try {
+            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString("user_nickname");
+                }
+            }, userNickname);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }
