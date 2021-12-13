@@ -9,7 +9,7 @@ public interface UserDao {
     List<UserDto> selectAll();
     void deleteAll();
     void insertUser(UserDto userDto);
-    List<String> selectEmailByEmail(String userEmail);
-    List<String> selectByNickname(String userNickName);
+    String selectEmailByEmail(String userEmail);
+    String selectByNickname(String userNickName);
 
 }
