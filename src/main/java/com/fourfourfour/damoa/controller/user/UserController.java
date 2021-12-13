@@ -115,7 +115,7 @@ public class UserController {
         }
 
         // 이메일 중복 확인
-        if(!userService.emailDulicationCheck(user.getUserEmail())) {
+        if(!userService.emailDuplicationCheck(user.getUserEmail())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 이메일입니다.")
