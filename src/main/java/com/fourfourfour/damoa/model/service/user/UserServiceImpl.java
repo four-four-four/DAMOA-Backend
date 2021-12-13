@@ -31,27 +31,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailDuplicationCheck(String userEmail) {
 
-        List<String> resultEmail = userDao.selectEmailByEmail(userEmail);
+        String resultEmail = userDao.selectEmailByEmail(userEmail);
 
-        if (resultEmail.isEmpty()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return resultEmail == null;
     }
 
     @Override
     public boolean nicknameDuplicationCheck(String userNickname) {
 
-        List<String> resultNickname = userDao.selectByNickname(userNickname);
+        String resultNickname = userDao.selectByNickname(userNickname);
 
-        if (resultNickname.isEmpty()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return resultNickname == null;
     }
 
 }
