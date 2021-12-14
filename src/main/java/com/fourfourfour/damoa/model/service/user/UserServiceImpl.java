@@ -34,11 +34,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean nicknameDuplicationCheck(String userNickname) {
-
-        String resultNickname = userDao.selectByNickname(userNickname);
-
-        return resultNickname == null;
+    public boolean isNicknameDuplication(String userNickname) {
+        return userDao.selectByNickname(userNickname) != null;
     }
 
 }
