@@ -9,7 +9,7 @@ public interface UserService {
     List<UserDto> findAll();
     void removeAll();
     void register(UserDto user);
-    boolean emailDuplicationCheck(String UserEmail);
-    boolean nicknameDuplicationCheck(String userNickname);
+    boolean isEmailDuplication(String UserEmail);
+    boolean isNicknameDuplication(String userNickname);
 
 }
