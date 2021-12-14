@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 // http://localhost:9999/swagger-ui/index.html
@@ -83,6 +85,60 @@ public class UserController {
             // 삭제 요청이 성공한 경우
             userService.removeAll();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .data("잘못된 요청입니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+    }
+
+    @ApiOperation(value="회원 가입", response = BasicResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원 가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 장애 발생")
+    })
+    @PostMapping()
+    public ResponseEntity register(final @Valid @RequestBody UserDto user, Errors errors) {
+        BasicResponseDto response;
+        // user 객체 안에 값이 제대로 들어왔는지 확인
+        if (errors.hasErrors()) {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .data(errors)
+                    .build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        // 이메일 중복 확인
+        if(!userService.isEmailDuplication(user.getUserEmail())) {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.CONFLICT.value())
+                    .data("사용중인 이메일입니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        // 닉네임 중복 확인
+        if(!userService.isNicknameDuplication(user.getUserNickname())) {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.CONFLICT.value())
+                    .data("사용중인 닉네임입니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+
+        try {
+            userService.register(user);
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.CREATED.value())
+                    .data("회원가입 되었습니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.BAD_REQUEST.value())

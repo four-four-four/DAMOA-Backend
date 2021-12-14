@@ -23,4 +23,19 @@ public class UserServiceImpl implements UserService {
         userDao.deleteAll();
     }
 
+    @Override
+    public void register(UserDto user) {
+        userDao.insertUser(user);
+    }
+
+    @Override
+    public boolean isEmailDuplication(String userEmail) {
+        return userDao.selectEmailByEmail(userEmail) != null;
+    }
+
+    @Override
+    public boolean isNicknameDuplication(String userNickname) {
+        return userDao.selectByNickname(userNickname) != null;
+    }
+
 }

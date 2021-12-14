@@ -2,6 +2,7 @@ package com.fourfourfour.damoa.model.dao.user;
 
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -60,5 +61,72 @@ public class JdbcUserDaoImpl implements UserDao {
                 .append(TABLE_NAME);
 
         jdbcTemplate.update(sql.toString());
+    }
+
+    @Override
+    public void insertUser(UserDto user) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("INSERT INTO").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("(" +
+                        "user_email, user_pw, user_nickname, " +
+                        "user_gender, user_birth_date, user_job, " +
+                        "user_service_agree, user_privacy_agree, user_location_agree, user_promotion_agree)").append(" ")
+                .append("VALUES").append(" ")
+                .append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        jdbcTemplate.update(sql.toString(),
+                user.getUserEmail(),
+                user.getUserPw(),
+                user.getUserNickname(),
+                user.getUserGender(),
+                user.getUserBirthDate(),
+                user.getUserJob(),
+                user.isUserServiceAgree(),
+                user.isUserPrivacyAgree(),
+                user.isUserLocationAgree(),
+                user.isUserPromotionAgree()
+        );
+    }
+
+    @Override
+    public String selectEmailByEmail(String userEmail) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("SELECT user_email FROM").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("WHERE user_email = ?");
+
+        try {
+            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString("user_email");
+                }
+            }, userEmail);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String selectByNickname(String userNickname) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("SELECT user_nickname FROM").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("WHERE user_nickname = ?");
+
+        try {
+            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                    return rs.getString("user_nickname");
+                }
+            }, userNickname);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 }
