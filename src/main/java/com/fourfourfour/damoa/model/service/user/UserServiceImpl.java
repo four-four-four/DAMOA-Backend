@@ -29,11 +29,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean emailDuplicationCheck(String userEmail) {
-
-        String resultEmail = userDao.selectEmailByEmail(userEmail);
-
-        return resultEmail == null;
+    public boolean isEmailDuplication(String userEmail) {
+        return userDao.selectEmailByEmail(userEmail) != null;
     }
 
     @Override
