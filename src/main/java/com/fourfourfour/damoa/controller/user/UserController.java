@@ -133,6 +133,8 @@ public class UserController {
         }
 
         try {
+            user.setUserPw(passwordEncoder.encode(user.getUserPw()));
+            user.setRole("ROLE_USER");
             userService.register(user);
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CREATED.value())
