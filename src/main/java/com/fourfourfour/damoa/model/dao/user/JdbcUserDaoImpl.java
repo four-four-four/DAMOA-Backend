@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,11 +38,23 @@ public class JdbcUserDaoImpl implements UserDao {
                     rs.getBoolean("user_service_agree"),
                     rs.getBoolean("user_privacy_agree"),
                     rs.getBoolean("user_location_agree"),
-                    rs.getBoolean("user_promotion_agree")
+                    rs.getBoolean("user_promotion_agree"),
+                    rs.getString("user_role")
             );
             return user;
         }
     };
+
+    @Override
+    public UserDto selectByUserEmail(String userEmail) {
+        StringBuilder sql = new StringBuilder();
+        sql
+                .append("SELECT * FROM").append(" ")
+                .append(TABLE_NAME).append(" ")
+                .append("WHERE user_email = ?");
+
+        return jdbcTemplate.query(sql.toString(), userRowMapper, userEmail).get(0);
+    }
 
     @Override
     public List<UserDto> selectAll() {
