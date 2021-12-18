@@ -28,6 +28,9 @@ dependencies {
 	// jwt
 	implementation group: 'com.auth0', name: 'java-jwt', version: '3.18.2'
 
+	// devtools
+	implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.3.12.RELEASE'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor('org.projectlombok:lombok')
 	testAnnotationProcessor('org.projectlombok:lombok')
