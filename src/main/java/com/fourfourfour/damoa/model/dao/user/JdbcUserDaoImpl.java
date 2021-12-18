@@ -72,22 +72,28 @@ public class JdbcUserDaoImpl implements UserDao {
                 .append("(" +
                         "user_email, user_pw, user_nickname, " +
                         "user_gender, user_birth_date, user_job, " +
-                        "user_service_agree, user_privacy_agree, user_location_agree, user_promotion_agree)").append(" ")
+                        "user_service_agree, user_privacy_agree, user_location_agree, user_promotion_agree, user_role)").append(" ")
                 .append("VALUES").append(" ")
-                .append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                .append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        jdbcTemplate.update(sql.toString(),
-                user.getUserEmail(),
-                user.getUserPw(),
-                user.getUserNickname(),
-                user.getUserGender(),
-                user.getUserBirthDate(),
-                user.getUserJob(),
-                user.isUserServiceAgree(),
-                user.isUserPrivacyAgree(),
-                user.isUserLocationAgree(),
-                user.isUserPromotionAgree()
-        );
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement pstmt = con.prepareStatement(sql.toString(), new String[] {"user_idx"});
+            pstmt.setString(1, user.getUserEmail());
+            pstmt.setString(2, user.getUserPw());
+            pstmt.setString(3, user.getUserNickname());
+            pstmt.setString(4, user.getUserGender());
+            pstmt.setDate(5, Date.valueOf(user.getUserBirthDate()));
+            pstmt.setString(6, user.getUserJob());
+            pstmt.setBoolean(7, user.isUserServiceAgree());
+            pstmt.setBoolean(8, user.isUserPrivacyAgree());
+            pstmt.setBoolean(9, user.isUserLocationAgree());
+            pstmt.setBoolean(10, user.isUserPromotionAgree());
+            pstmt.setString(11, user.getRole());
+            return pstmt;
+        }, keyHolder);
+
+        user.setUserIdx(keyHolder.getKey().longValue());
     }
 
     @Override
