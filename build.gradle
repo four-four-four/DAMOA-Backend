@@ -25,6 +25,9 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.1'
 	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.12.RELEASE'
 
+	// jwt
+	implementation group: 'com.auth0', name: 'java-jwt', version: '3.18.2'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor('org.projectlombok:lombok')
 	testAnnotationProcessor('org.projectlombok:lombok')
