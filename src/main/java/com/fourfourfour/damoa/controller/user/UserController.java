@@ -115,7 +115,7 @@ public class UserController {
         }
 
         // 이메일 중복 확인
-        if(!userService.isEmailDuplication(user.getUserEmail())) {
+        if(userService.isEmailDuplication(user.getUserEmail())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 이메일입니다.")
@@ -124,7 +124,7 @@ public class UserController {
         }
 
         // 닉네임 중복 확인
-        if(!userService.isNicknameDuplication(user.getUserNickname())) {
+        if(userService.isNicknameDuplication(user.getUserNickname())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 닉네임입니다.")
