@@ -1,5 +1,9 @@
 package com.fourfourfour.damoa.controller.user;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fourfourfour.damoa.config.auth.PrincipalDetails;
+import com.fourfourfour.damoa.config.jwt.JwtProperties;
 import com.fourfourfour.damoa.model.dto.response.BasicResponseDto;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import com.fourfourfour.damoa.model.service.user.UserService;
@@ -8,21 +12,47 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
 
 // http://localhost:9999/swagger-ui/index.html
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
 
+    private final String jwtKey;
+    private final long tokenValidityInMilliseconds;
+
+    public UserController (
+            @Value("${jwt.key}") String jwtKey,
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds) {
+        this.jwtKey = jwtKey;
+        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
+    }
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @Autowired
+    private JwtProperties jwtProperties;
 
     @Operation(summary = "all user find", description = "전체 회원 정보 조회")
     @ApiResponses({
@@ -148,7 +178,34 @@ public class UserController {
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
 
+    @PostMapping("/login")
+    protected ResponseEntity login(@RequestBody UserDto user) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(user.getUserEmail(), user.getUserPw());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+
+        String jwtToken = JWT.create()
+                .withSubject("token")
+                .withExpiresAt(new Date(System.currentTimeMillis() + tokenValidityInMilliseconds))
+                .withClaim(jwtProperties.getCLAIM(), principalDetails.getUser().getUserEmail())
+                .sign(Algorithm.HMAC512(jwtKey));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(jwtProperties.getHEADER(), jwtProperties.getPREFIX() + jwtToken);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("jwt", jwtToken);
+
+        BasicResponseDto response = BasicResponseDto.builder()
+                .status(200)
+                .data(responseData)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
     }
 
 }
