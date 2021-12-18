@@ -54,4 +54,7 @@ public class UserDto {
     @ApiModelProperty(value = "프로모션 약관 동의")
     private boolean userPromotionAgree;
 
+    @ApiModelProperty(value = "권한")
+    private String role;
+
 }
