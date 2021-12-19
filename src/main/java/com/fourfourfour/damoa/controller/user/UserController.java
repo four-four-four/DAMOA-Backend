@@ -34,25 +34,26 @@ public class UserController {
 
     private final String jwtKey;
     private final long tokenValidityInMilliseconds;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtProperties jwtProperties;
 
     public UserController (
             @Value("${jwt.key}") String jwtKey,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds) {
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds,
+            UserService userService,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManagerBuilder authenticationManagerBuilder,
+            JwtProperties jwtProperties
+    ) {
         this.jwtKey = jwtKey;
         this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.jwtProperties = jwtProperties;
     }
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuthenticationManagerBuilder authenticationManagerBuilder;
-
-    @Autowired
-    private JwtProperties jwtProperties;
 
     @Operation(summary = "all user find", description = "전체 회원 정보 조회")
     @ApiResponses({
