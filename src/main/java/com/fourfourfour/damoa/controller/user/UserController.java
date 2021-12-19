@@ -18,7 +18,7 @@ import java.util.List;
 
 // http://localhost:9999/swagger-ui/index.html
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
