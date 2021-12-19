@@ -49,6 +49,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void isNicknameDuplication() {
+    public void testIsNicknameDuplication() {
     }
 }
