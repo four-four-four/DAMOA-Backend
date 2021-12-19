@@ -177,4 +177,31 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value="닉네임 중복 체크", response = BasicResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(responseCode = "303", description = "닉네임 중복"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "닉네임이 중복되지 않습니다"),
+            @ApiResponse(responseCode = "500", description = "서버 장애 발생")
+    })
+    @PostMapping("/nickname/{userNickname}/exists")
+    public ResponseEntity checkNicknameDuplicate(@PathVariable String userNickname) {
+        BasicResponseDto response;
+
+        // 닉네임 중복 확인
+        if(!userService.isNicknameDuplication(userNickname)) {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.CONFLICT.value())
+                    .data("사용중인 닉네임입니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+        else {
+            response = BasicResponseDto.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .data("닉네임이 중복되지 않습니다.")
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
 }
