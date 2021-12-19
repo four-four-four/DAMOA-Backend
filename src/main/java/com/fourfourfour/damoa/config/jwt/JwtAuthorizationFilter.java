@@ -7,8 +7,6 @@ import com.fourfourfour.damoa.model.dao.user.UserDao;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,26 +28,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final String jwtKey;
-    private final long tokenValidityInMilliseconds;
+    private final UserDao userDao;
+    private final JwtProperties jwtProperties;
 
-    private UserDao userDao;
-
-    private JwtProperties jwtProperties;
-
-    @Autowired
-    public JwtAuthorizationFilter(
-            AuthenticationManager authenticationManager,
-            UserDao userDao,
-            JwtProperties jwtProperties,
-            @Value("${jwt.key}") String jwtKey,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds
-            ) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDao userDao, JwtProperties jwtProperties) {
         super(authenticationManager);
         this.userDao = userDao;
         this.jwtProperties = jwtProperties;
-        this.jwtKey = jwtKey;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
     }
 
     @Override
@@ -68,7 +53,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
          * JWT 토큰을 검증해서 정상적인 사용자인지 확인
          */
         String jwtToken = jwtHeader.replace(jwtProperties.getPREFIX(), "");
-        String userEmail = JWT.require(Algorithm.HMAC512(jwtKey)).build().verify(jwtToken).getClaim(jwtProperties.getCLAIM()).asString();
+        String userEmail = JWT.require(Algorithm.HMAC512(jwtProperties.getJwtKey())).build().verify(jwtToken).getClaim(jwtProperties.getCLAIM()).asString();
 
         if (userEmail != null) {
             System.out.println("userEmail 정상 : " + userEmail);
