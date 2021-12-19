@@ -3,6 +3,7 @@ package com.fourfourfour.damoa.config;
 import com.fourfourfour.damoa.config.jwt.JwtAuthorizationFilter;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
 import com.fourfourfour.damoa.model.dao.user.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final String jwtKey;
     private final long tokenValidityInMilliseconds;
 
+    @Autowired
     public SecurityConfig (
             CorsFilter corsFilter,
             UserDao userDao,
