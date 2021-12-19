@@ -12,6 +12,7 @@ class UserServiceImplTest {
 
     @Test
     void register() {
+    public void testRegister() {
     }
 
     @Test
