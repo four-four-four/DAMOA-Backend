@@ -11,15 +11,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -29,31 +27,14 @@ import java.util.*;
 
 // http://localhost:9999/swagger-ui/index.html
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final String jwtKey;
-    private final long tokenValidityInMilliseconds;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProperties jwtProperties;
-
-    public UserController (
-            @Value("${jwt.key}") String jwtKey,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds,
-            UserService userService,
-            PasswordEncoder passwordEncoder,
-            AuthenticationManagerBuilder authenticationManagerBuilder,
-            JwtProperties jwtProperties
-    ) {
-        this.jwtKey = jwtKey;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.jwtProperties = jwtProperties;
-    }
 
     @Operation(summary = "all user find", description = "전체 회원 정보 조회")
     @ApiResponses({
@@ -191,9 +172,9 @@ public class UserController {
 
         String jwtToken = JWT.create()
                 .withSubject("token")
-                .withExpiresAt(new Date(System.currentTimeMillis() + tokenValidityInMilliseconds))
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getTokenValidityInMilliseconds()))
                 .withClaim(jwtProperties.getCLAIM(), principalDetails.getUser().getUserEmail())
-                .sign(Algorithm.HMAC512(jwtKey));
+                .sign(Algorithm.HMAC512(jwtProperties.getJwtKey()));
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(jwtProperties.getHEADER(), jwtProperties.getPREFIX() + jwtToken);
