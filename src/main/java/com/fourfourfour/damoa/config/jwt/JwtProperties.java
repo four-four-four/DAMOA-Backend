@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProperties {
 
-    String HEADER = "Authorization";
-    String PREFIX = "Bearer ";
-    String CLAIM = "userEmail";
+    @Value("${jwt.key}")
+    private String jwtKey;
+    @Value("${jwt.token-validity-in-seconds}")
+    private long tokenValidityInMilliseconds;
+    private final String HEADER = "Authorization";
+    private final String PREFIX = "Bearer ";
+    private final String CLAIM = "userEmail";
 
 }
