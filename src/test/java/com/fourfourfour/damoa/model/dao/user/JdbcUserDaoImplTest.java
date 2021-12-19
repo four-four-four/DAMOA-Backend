@@ -49,4 +49,15 @@ class JdbcUserDaoImplTest {
         Assertions.assertThat(result).isNull(); // Null일 때 통과
     }
 
+    @Test
+    public void testSelectByNickname(){
+        //given
+        String userNickname = "test4";
+
+        //when
+        String result = userDao.selectByNickname(userNickname);
+
+        //then
+        Assertions.assertThat(result).isNull(); // Null일 때 통과
+    }
 }
