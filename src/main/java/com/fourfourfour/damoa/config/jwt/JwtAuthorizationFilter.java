@@ -7,6 +7,7 @@ import com.fourfourfour.damoa.model.dao.user.UserDao;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +37,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtProperties jwtProperties;
 
+    @Autowired
     public JwtAuthorizationFilter(
             AuthenticationManager authenticationManager,
             UserDao userDao,
