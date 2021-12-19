@@ -50,5 +50,10 @@ class UserServiceImplTest {
 
     @Test
     public void testIsNicknameDuplication() {
+        String userNickname = "testtest11";
+
+        boolean result = userService.isNicknameDuplication(userNickname);
+
+        Assertions.assertThat(result).isTrue(); // True일 때 중복
     }
 }
