@@ -3,8 +3,7 @@ package com.fourfourfour.damoa.config;
 import com.fourfourfour.damoa.config.jwt.JwtAuthorizationFilter;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
 import com.fourfourfour.damoa.model.dao.user.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,28 +26,12 @@ import org.springframework.web.filter.CorsFilter;
  * secured 애노테이션 활성화, preAuthorize 애노테이션 활성화
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final UserDao userDao;
     private final JwtProperties jwtProperties;
-
-    private final String jwtKey;
-    private final long tokenValidityInMilliseconds;
-
-    @Autowired
-    public SecurityConfig (
-            CorsFilter corsFilter,
-            UserDao userDao,
-            JwtProperties jwtProperties,
-            @Value("${jwt.key}") String jwtKey,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds) {
-        this.corsFilter = corsFilter;
-        this.userDao = userDao;
-        this.jwtProperties = jwtProperties;
-        this.jwtKey = jwtKey;
-        this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -88,14 +71,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  * 로그인 필터 등록
                  */
                 .addFilterBefore(
-                        new JwtAuthorizationFilter(
-                                authenticationManager(),
-                                userDao,
-                                jwtProperties,
-                                jwtKey,
-                                tokenValidityInMilliseconds
-                        ),
-                        UsernamePasswordAuthenticationFilter.class)
+                        new JwtAuthorizationFilter(authenticationManager(), userDao, jwtProperties),
+                        UsernamePasswordAuthenticationFilter.class
+                )
 
                 .authorizeRequests()
 
