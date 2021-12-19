@@ -189,7 +189,7 @@ public class UserController {
         BasicResponseDto response;
 
         // 닉네임 중복 확인
-        if(!userService.isNicknameDuplication(userNickname)) {
+        if(userService.isNicknameDuplication(userNickname)) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 닉네임입니다.")
