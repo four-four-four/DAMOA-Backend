@@ -41,6 +41,11 @@ class UserServiceImplTest {
 
     @Test
     public void testIsEmailDuplication() {
+        String userEmail = "test3@test.com";
+
+        boolean result = userService.isEmailDuplication(userEmail);
+
+        Assertions.assertThat(result).isTrue(); // True일 때 중복
     }
 
     @Test
