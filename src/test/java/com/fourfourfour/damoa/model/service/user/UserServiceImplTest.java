@@ -40,7 +40,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void isEmailDuplication() {
+    public void testIsEmailDuplication() {
     }
 
     @Test
