@@ -37,4 +37,16 @@ class JdbcUserDaoImplTest {
         Assertions.assertThat(user.getUserNickname()).isEqualTo(findNickname);
     }
 
+    @Test
+    public void testSelectEmailByEmail(){
+        //given
+        String userEmail = "test4@test.com";
+
+        //when
+        String result = userDao.selectEmailByEmail(userEmail);
+
+        //then
+        Assertions.assertThat(result).isNull(); // Null일 때 통과
+    }
+
 }
