@@ -1,5 +1,9 @@
 package com.fourfourfour.damoa.controller.user;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fourfourfour.damoa.config.auth.PrincipalDetails;
+import com.fourfourfour.damoa.config.jwt.JwtProperties;
 import com.fourfourfour.damoa.model.dto.response.BasicResponseDto;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import com.fourfourfour.damoa.model.service.user.UserService;
@@ -7,22 +11,30 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
 
 // http://localhost:9999/swagger-ui/index.html
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtProperties jwtProperties;
 
     @Operation(summary = "all user find", description = "전체 회원 정보 조회")
     @ApiResponses({
@@ -115,7 +127,7 @@ public class UserController {
         }
 
         // 이메일 중복 확인
-        if(!userService.isEmailDuplication(user.getUserEmail())) {
+        if(userService.isEmailDuplication(user.getUserEmail())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 이메일입니다.")
@@ -124,7 +136,7 @@ public class UserController {
         }
 
         // 닉네임 중복 확인
-        if(!userService.isNicknameDuplication(user.getUserNickname())) {
+        if(userService.isNicknameDuplication(user.getUserNickname())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 닉네임입니다.")
@@ -133,6 +145,8 @@ public class UserController {
         }
 
         try {
+            user.setUserPw(passwordEncoder.encode(user.getUserPw()));
+            user.setRole("ROLE_USER");
             userService.register(user);
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CREATED.value())
@@ -146,7 +160,34 @@ public class UserController {
                     .build();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
 
+    @PostMapping("/login")
+    protected ResponseEntity login(@RequestBody UserDto user) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(user.getUserEmail(), user.getUserPw());
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+
+        String jwtToken = JWT.create()
+                .withSubject("token")
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getTokenValidityInMilliseconds()))
+                .withClaim(jwtProperties.getCLAIM(), principalDetails.getUser().getUserEmail())
+                .sign(Algorithm.HMAC512(jwtProperties.getJwtKey()));
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(jwtProperties.getHEADER(), jwtProperties.getPREFIX() + jwtToken);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("jwt", jwtToken);
+
+        BasicResponseDto response = BasicResponseDto.builder()
+                .status(200)
+                .data(responseData)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(response);
     }
 
     @ApiOperation(value="이메일 중복 체크", response = BasicResponseDto.class)
