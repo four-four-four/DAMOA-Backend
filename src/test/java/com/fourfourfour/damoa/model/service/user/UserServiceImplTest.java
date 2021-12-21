@@ -2,7 +2,6 @@ package com.fourfourfour.damoa.model.service.user;
 
 import com.fourfourfour.damoa.model.dao.user.UserDao;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -43,7 +44,7 @@ class UserServiceImplTest {
 
         //then
         UserDto result = userDao.selectUser(user.getUserIdx());
-        Assertions.assertThat(user).isEqualTo(result);
+        assertThat(user).isEqualTo(result);
     }
 
     @Test
@@ -69,10 +70,10 @@ class UserServiceImplTest {
         if (!result) {
             userDao.insertUser(user);
             UserDto userResult = userDao.selectUser(user.getUserIdx());
-            Assertions.assertThat(user).isEqualTo(userResult);
+            assertThat(user).isEqualTo(userResult);
         }
         else {
-            Assertions.assertThat(result).as("이메일이 중복됩니다.").isFalse(); // false가 아닐 때 중복
+            assertThat(result).as("이메일이 중복됩니다.").isFalse(); // false가 아닐 때 중복
         }
     }
 
@@ -97,10 +98,10 @@ class UserServiceImplTest {
         if (!result) {
             userDao.insertUser(user);
             UserDto userResult = userDao.selectUser(user.getUserIdx());
-            Assertions.assertThat(user).isEqualTo(userResult);
+            assertThat(user).isEqualTo(userResult);
         }
         else {
-            Assertions.assertThat(result).as("닉네임이 중복됩니다.").isFalse(); // false가 아닐 때 중복
+            assertThat(result).as("닉네임이 중복됩니다.").isFalse(); // false가 아닐 때 중복
         }
     }
 }
