@@ -78,10 +78,29 @@ class UserServiceImplTest {
 
     @Test
     public void testIsNicknameDuplication() {
-        String userNickname = "testtest11";
+        //given
+        UserDto user = new UserDto();
+        user.setUserEmail("test3@test.com");
+        user.setUserPw(passwordEncoder.encode("5555"));
+        user.setUserJob("대학생");
+        user.setUserGender("female");
+        user.setUserNickname("테스트1011");
+        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
+        user.setRole("ROLE_USER");
+        user.setUserPromotionAgree(true);
+        user.setUserPrivacyAgree(true);
+        user.setUserLocationAgree(true);
+        user.setUserServiceAgree(true);
 
-        boolean result = userService.isNicknameDuplication(userNickname);
+        boolean result = userService.isNicknameDuplication(user.getUserNickname());
 
-        Assertions.assertThat(result).isTrue(); // True일 때 중복
+        if (!result) {
+            userDao.insertUser(user);
+            UserDto userResult = userDao.selectUser(user.getUserIdx());
+            Assertions.assertThat(user).isEqualTo(userResult);
+        }
+        else {
+            Assertions.assertThat(result).as("닉네임이 중복됩니다.").isFalse(); // false가 아닐 때 중복
+        }
     }
 }
