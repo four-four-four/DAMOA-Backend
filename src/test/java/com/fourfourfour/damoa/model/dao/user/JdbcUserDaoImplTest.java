@@ -46,13 +46,29 @@ class JdbcUserDaoImplTest {
     @Test
     public void testSelectEmailByEmail(){
         //given
-        String userEmail = "test4@test.com";
+        UserDto user = new UserDto();
+        user.setUserEmail("test3@test.com");
+        user.setUserPw(passwordEncoder.encode("5555"));
+        user.setUserJob("대학생");
+        user.setUserGender("female");
+        user.setUserNickname("테스트");
+        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
+        user.setRole("ROLE_USER");
+        user.setUserPromotionAgree(true);
+        user.setUserPrivacyAgree(true);
+        user.setUserLocationAgree(true);
+        user.setUserServiceAgree(true);
 
         //when
-        String result = userDao.selectEmailByEmail(userEmail);
+        String result = userDao.selectEmailByEmail(user.getUserEmail()); // 이메일 중복 체크
 
         //then
-        Assertions.assertThat(result).isNull(); // Null일 때 통과
+        if (result == null) {
+            userDao.insertUser(user); // 중복되지 않기 때문에 회원가입
+        }
+        else {
+            Assertions.assertThat(result).isNotNull(); // Not null일 때 중복
+        }
     }
 
     @Test
