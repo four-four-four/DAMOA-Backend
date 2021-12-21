@@ -48,11 +48,32 @@ class UserServiceImplTest {
 
     @Test
     public void testIsEmailDuplication() {
-        String userEmail = "test3@test.com";
+        //given
+        UserDto user = new UserDto();
+        user.setUserEmail("test3@test.com");
+        user.setUserPw(passwordEncoder.encode("5555"));
+        user.setUserJob("대학생");
+        user.setUserGender("female");
+        user.setUserNickname("테스트");
+        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
+        user.setRole("ROLE_USER");
+        user.setUserPromotionAgree(true);
+        user.setUserPrivacyAgree(true);
+        user.setUserLocationAgree(true);
+        user.setUserServiceAgree(true);
 
-        boolean result = userService.isEmailDuplication(userEmail);
+        //when
+        boolean result = userService.isEmailDuplication(user.getUserEmail());
 
-        Assertions.assertThat(result).isTrue(); // True일 때 중복
+        //then
+        if (!result) {
+            userDao.insertUser(user);
+            UserDto userResult = userDao.selectUser(user.getUserIdx());
+            Assertions.assertThat(user).isEqualTo(userResult);
+        }
+        else {
+            Assertions.assertThat(result).as("이메일이 중복됩니다.").isFalse(); // false가 아닐 때 중복
+        }
     }
 
     @Test
