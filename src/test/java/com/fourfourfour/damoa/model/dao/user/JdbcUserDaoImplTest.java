@@ -5,8 +5,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 
 @SpringBootTest
 @Transactional
@@ -14,27 +16,31 @@ class JdbcUserDaoImplTest {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     public void testInsertUser(){
         //given
         UserDto user = new UserDto();
         user.setUserEmail("test@test.com");
-        user.setUserPw("1234");
+        user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
         user.setUserNickname("테스트");
+        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
+        user.setRole("ROLE_USER");
         user.setUserPromotionAgree(true);
         user.setUserPrivacyAgree(true);
         user.setUserLocationAgree(true);
         user.setUserServiceAgree(true);
-        //when
 
+       //when
         userDao.insertUser(user);
 
-        //then
-        String findNickname = userDao.selectByNickname(user.getUserNickname());
-        Assertions.assertThat(user.getUserNickname()).isEqualTo(findNickname);
+       //then
+        UserDto result = userDao.selectUser(user.getUserIdx());
+        Assertions.assertThat(user).isEqualTo(result);
     }
 
     @Test
