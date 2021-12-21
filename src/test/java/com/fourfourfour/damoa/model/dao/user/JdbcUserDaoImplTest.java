@@ -65,9 +65,11 @@ class JdbcUserDaoImplTest {
         //then
         if (result == null) {
             userDao.insertUser(user); // 중복되지 않기 때문에 회원가입
+            UserDto userResult = userDao.selectUser(user.getUserIdx());
+            Assertions.assertThat(user).isEqualTo(userResult);
         }
         else {
-            Assertions.assertThat(result).isNotNull(); // Not null일 때 중복
+            Assertions.assertThat(result).as("이메일이 중복됩니다.").isNull(); // null이 아닐 때 중복
         }
     }
 
