@@ -12,5 +12,6 @@ public interface UserDao {
     String selectEmailByEmail(String userEmail);
     String selectByNickname(String userNickName);
     UserDto selectByUserEmail(String userEmail);
+    UserDto selectUser(long integer);
 
 }
