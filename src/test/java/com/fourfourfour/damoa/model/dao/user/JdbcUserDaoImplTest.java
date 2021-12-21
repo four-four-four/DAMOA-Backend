@@ -99,7 +99,7 @@ class JdbcUserDaoImplTest {
             Assertions.assertThat(user).isEqualTo(userResult);
         }
         else {
-            Assertions.assertThat(user).isNotNull(); //Not null일 때 중복
+            Assertions.assertThat(user).as("닉네임이 중복됩니다.").isNull(); // null이 아닐 때 중복
         }
     }
 }
