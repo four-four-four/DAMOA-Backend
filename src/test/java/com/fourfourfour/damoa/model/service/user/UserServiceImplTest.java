@@ -64,17 +64,13 @@ class UserServiceImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        boolean result = userService.isEmailDuplication(user.getUserEmail());
+        boolean email = userService.isEmailDuplication(user.getUserEmail());
+        assertThat(email).as("[회원가입 전] 이메일이 중복됩니다.").isFalse();
 
         //then
-        if (!result) {
-            userDao.insertUser(user);
-            UserDto userResult = userDao.selectUser(user.getUserIdx());
-            assertThat(user).isEqualTo(userResult);
-        }
-        else {
-            assertThat(result).as("이메일이 중복됩니다.").isFalse(); // false가 아닐 때 중복
-        }
+        userDao.insertUser(user);
+        boolean result = userService.isEmailDuplication(user.getUserEmail());
+        assertThat(result).as("[회원가입 후] 이메일이 중복됩니다.").isFalse();
     }
 
     @Test
