@@ -150,35 +150,4 @@ public class JdbcUserDaoImpl implements UserDao {
             return null;
         }
     }
-
-    @Override
-    public UserDto selectUser(long userIdx) {
-        StringBuilder sql = new StringBuilder();
-        sql
-                .append("SELECT * FROM").append(" ")
-                .append(TABLE_NAME).append(" ")
-                .append("WHERE user_idx = ?");
-        UserDto userResult = jdbcTemplate.queryForObject(sql.toString(), new RowMapper<UserDto>() {
-            @Override
-            public UserDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Date date = rs.getDate("user_birth_date");
-                UserDto user = new UserDto(
-                        rs.getLong("user_idx"),
-                        rs.getString("user_email"),
-                        rs.getString("user_pw"),
-                        rs.getString("user_nickname"),
-                        rs.getString("user_gender"),
-                        date == null ? null : date.toLocalDate(),
-                        rs.getString("user_job"),
-                        rs.getBoolean("user_service_agree"),
-                        rs.getBoolean("user_privacy_agree"),
-                        rs.getBoolean("user_location_agree"),
-                        rs.getBoolean("user_promotion_agree"),
-                        rs.getString("user_role")
-                );
-                return user;
-            }
-        }, userIdx);
-        return userResult;
-    }
 }
