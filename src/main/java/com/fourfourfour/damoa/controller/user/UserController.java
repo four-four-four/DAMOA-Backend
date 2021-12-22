@@ -162,6 +162,13 @@ public class UserController {
         }
     }
 
+    @ApiOperation(value="로그인", response = BasicResponseDto.class)
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공 및 토큰 발행"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 장애 발생")
+    })
     @PostMapping("/login")
     protected ResponseEntity login(@RequestBody UserDto user) {
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -180,7 +187,8 @@ public class UserController {
         httpHeaders.add(jwtProperties.getHEADER(), jwtProperties.getPREFIX() + jwtToken);
 
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("jwt", jwtToken);
+        responseData.put("jwtToken", jwtToken);
+        responseData.put("role", principalDetails.getUser().getRole());
 
         BasicResponseDto response = BasicResponseDto.builder()
                 .status(200)
