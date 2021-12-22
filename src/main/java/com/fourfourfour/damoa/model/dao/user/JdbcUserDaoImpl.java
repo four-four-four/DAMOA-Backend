@@ -123,22 +123,13 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public String selectByNickname(String userNickname) {
+    public Integer selectByNickname(String userNickname) {
         StringBuilder sql = new StringBuilder();
         sql
-                .append("SELECT user_nickname FROM").append(" ")
+                .append("SELECT COUNT(*) FROM").append(" ")
                 .append(TABLE_NAME).append(" ")
                 .append("WHERE user_nickname = ?");
 
-        try {
-            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
-                @Override
-                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return rs.getString("user_nickname");
-                }
-            }, userNickname);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql.toString(), Integer.class, userNickname);
     }
 }
