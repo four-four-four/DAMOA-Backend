@@ -9,8 +9,8 @@ public interface UserDao {
     List<UserDto> selectAll();
     void deleteAll();
     void insertUser(UserDto userDto);
-    String selectEmailByEmail(String userEmail);
-    String selectByNickname(String userNickName);
+    Integer selectEmailByEmail(String userEmail);
+    Integer selectByNickname(String userNickName);
     UserDto selectByUserEmail(String userEmail);
 
 }
