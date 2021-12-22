@@ -61,13 +61,13 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        String email = userDao.selectEmailByEmail(user.getUserEmail());
-        assertThat(email).as("[회원가입 전] 이메일이 중복됩니다.").isNull();
+        Integer emailCount = userDao.selectEmailByEmail(user.getUserEmail());
+        assertThat(emailCount).as("[회원가입 전] 이메일이 중복됩니다.").isEqualTo(0);
 
         //then
         userDao.insertUser(user);
-        String result = userDao.selectEmailByEmail(user.getUserEmail());
-        assertThat(result).as("[회원가입 후] 이메일이 중복됩니다.").isNull();
+        Integer result = userDao.selectEmailByEmail(user.getUserEmail());
+        assertThat(result).as("[회원가입 후] 이메일이 중복됩니다.").isEqualTo(0);
 
     }
 
