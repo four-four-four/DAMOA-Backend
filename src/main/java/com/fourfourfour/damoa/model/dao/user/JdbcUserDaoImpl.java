@@ -112,23 +112,14 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public String selectEmailByEmail(String userEmail) {
+    public Integer selectEmailByEmail(String userEmail) {
         StringBuilder sql = new StringBuilder();
         sql
-                .append("SELECT user_email FROM").append(" ")
+                .append("SELECT COUNT(*) FROM").append(" ")
                 .append(TABLE_NAME).append(" ")
                 .append("WHERE user_email = ?");
 
-        try {
-            return jdbcTemplate.queryForObject(sql.toString(), new RowMapper<String>() {
-                @Override
-                public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return rs.getString("user_email");
-                }
-            }, userEmail);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return jdbcTemplate.queryForObject(sql.toString(), Integer.class, userEmail);
     }
 
     @Override
