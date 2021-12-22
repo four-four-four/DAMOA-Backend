@@ -81,7 +81,7 @@ class UserServiceImplTest {
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
-        user.setUserNickname("테스트1011");
+        user.setUserNickname("테스트");
         user.setUserBirthDate(LocalDate.of(1997, 10, 11));
         user.setRole("ROLE_USER");
         user.setUserPromotionAgree(true);
@@ -89,15 +89,13 @@ class UserServiceImplTest {
         user.setUserLocationAgree(true);
         user.setUserServiceAgree(true);
 
-        boolean result = userService.isNicknameDuplication(user.getUserNickname());
+        //when
+        boolean nickname = userService.isNicknameDuplication(user.getUserNickname());
+        assertThat(nickname).as("[회원가입 전] 닉네임이 중복됩니다.").isFalse();
 
-        if (!result) {
-            userDao.insertUser(user);
-            UserDto userResult = userDao.selectUser(user.getUserIdx());
-            assertThat(user).isEqualTo(userResult);
-        }
-        else {
-            assertThat(result).as("닉네임이 중복됩니다.").isFalse(); // false가 아닐 때 중복
-        }
+        //then
+        userDao.insertUser(user);
+        boolean result = userService.isNicknameDuplication(user.getUserNickname());
+        assertThat(result).as("[회원가입 후] 닉네임이 중복됩니다.").isFalse();
     }
 }
