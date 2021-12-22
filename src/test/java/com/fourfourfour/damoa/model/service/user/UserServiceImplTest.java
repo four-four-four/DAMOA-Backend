@@ -43,7 +43,7 @@ class UserServiceImplTest {
         userService.register(user);
 
         //then
-        UserDto result = userDao.selectUser(user.getUserIdx());
+        UserDto result = userDao.selectByUserEmail(user.getUserEmail());
         assertThat(user).isEqualTo(result);
     }
 
