@@ -88,16 +88,12 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        String result = userDao.selectByNickname(user.getUserNickname()); // 이메일 중복 체크
+        String nickname = userDao.selectByNickname(user.getUserNickname());
+        assertThat(nickname).as("[회원가입 전] 닉네임이 중복됩니다.").isNull();
 
         //then
-        if (result == null) {
-            userDao.insertUser(user); // 중복되지 않기 때문에 회원가입
-            UserDto userResult = userDao.selectUser(user.getUserIdx());
-            assertThat(user).isEqualTo(userResult);
-        }
-        else {
-            assertThat(user).as("닉네임이 중복됩니다.").isNull(); // null이 아닐 때 중복
-        }
+        userDao.insertUser(user);
+        String result = userDao.selectByNickname(user.getUserNickname());
+        assertThat(result).as("[회원가입 후] 닉네임이 중복됩니다.").isNull();
     }
 }
