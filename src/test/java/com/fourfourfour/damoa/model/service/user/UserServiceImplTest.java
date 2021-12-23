@@ -1,5 +1,6 @@
-package com.fourfourfour.damoa.model.dao.user;
+package com.fourfourfour.damoa.model.service.user;
 
+import com.fourfourfour.damoa.model.dao.user.UserDao;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-class JdbcUserDaoImplTest {
+class UserServiceImplTest {
 
     @Autowired
-    private UserDao userDao;
+    UserService userService;
+    @Autowired
+    UserDao userDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("회원가입")
-    public void insertUser(){
+    public void register() {
         //given
         UserDto user = new UserDto();
         user.setUserEmail("test@test.com");
@@ -39,7 +42,7 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        userDao.insertUser(user);
+        userService.register(user);
 
         //then
         UserDto findUser = userDao.selectUserByUserEmail(user.getUserEmail());
@@ -48,7 +51,7 @@ class JdbcUserDaoImplTest {
 
     @Test
     @DisplayName("이메일 중복 체크")
-    public void selectCountByEmail(){
+    public void isEmailDuplication() {
         //given
         String email = "test3@test.com";
 
@@ -66,18 +69,18 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        int count = userDao.selectCountByEmail(email);
-        assertThat(count).isEqualTo(0);
+        boolean isEmail = userService.isEmailDuplication(email);
+        assertThat(isEmail).isFalse();
 
         //then
         userDao.insertUser(user);
-        int result = userDao.selectCountByEmail(email);
-        assertThat(result).isEqualTo(1);
+        boolean result = userService.isEmailDuplication(email);
+        assertThat(result).isTrue();
     }
 
     @Test
     @DisplayName("닉네임 중복 체크")
-    public void selectCountByNickname(){
+    public void isNicknameDuplication() {
         //given
         String nickname = "테스트";
 
@@ -95,12 +98,12 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        int count = userDao.selectCountByNickname(nickname);
-        assertThat(count).isEqualTo(0);
+        boolean isNickname = userService.isNicknameDuplication(nickname);
+        assertThat(isNickname).isFalse();
 
         //then
         userDao.insertUser(user);
-        int result = userDao.selectCountByNickname(nickname);
-        assertThat(result).isEqualTo(1);
+        boolean result = userService.isNicknameDuplication(nickname);
+        assertThat(result).isTrue();
     }
 }

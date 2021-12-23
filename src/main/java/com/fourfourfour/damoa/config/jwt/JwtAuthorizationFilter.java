@@ -57,7 +57,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (userEmail != null) {
             System.out.println("userEmail 정상 : " + userEmail);
-            UserDto user = userDao.selectByUserEmail(userEmail);
+            UserDto user = userDao.selectUserByUserEmail(userEmail);
 
             PrincipalDetails principalDetails = new PrincipalDetails(user);
             System.out.println("principalDetails : " + principalDetails.getUser().getUserEmail());
