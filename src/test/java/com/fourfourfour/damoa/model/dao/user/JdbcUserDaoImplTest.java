@@ -76,14 +76,17 @@ class JdbcUserDaoImplTest {
     }
 
     @Test
-    public void testSelectByNickname(){
+    @DisplayName("닉네임 중복 체크")
+    public void selectCountByNickname(){
         //given
+        String nickname = "테스트";
+
         UserDto user = new UserDto();
         user.setUserEmail("test3@test.com");
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
-        user.setUserNickname("테스트");
+        user.setUserNickname(nickname);
         user.setUserBirthDate(LocalDate.of(1997, 10, 11));
         user.setRole("ROLE_USER");
         user.setUserPromotionAgree(true);
@@ -92,12 +95,12 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        Integer nicknameCount = userDao.selectByNickname(user.getUserNickname());
-        assertThat(nicknameCount).as("[회원가입 전] 닉네임이 중복됩니다.").isEqualTo(0);
+        int count = userDao.selectCountByNickname(nickname);
+        assertThat(count).isEqualTo(0);
 
         //then
         userDao.insertUser(user);
-        Integer result = userDao.selectByNickname(user.getUserNickname());
-        assertThat(result).as("[회원가입 후] 닉네임이 중복됩니다.").isEqualTo(0);
+        int result = userDao.selectCountByNickname(nickname);
+        assertThat(result).isEqualTo(1);
     }
 }
