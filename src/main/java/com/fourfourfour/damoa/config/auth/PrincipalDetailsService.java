@@ -18,7 +18,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         System.out.println("PrincipalDetailsService의 loadUserByUsername()");
         System.out.println("PrincipalDetailsService userEmail : " + userEmail);
-        UserDto user = userDao.selectByUserEmail(userEmail);
+        UserDto user = userDao.selectUserByUserEmail(userEmail);
         System.out.println("PrincipalDetailsService user : " + user);
         return new PrincipalDetails(user);
     }

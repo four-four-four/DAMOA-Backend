@@ -11,6 +11,6 @@ public interface UserDao {
     void insertUser(UserDto userDto);
     int selectEmailByEmail(String userEmail);
     int selectByNickname(String userNickName);
-    UserDto selectByUserEmail(String userEmail);
+    UserDto selectUserByUserEmail(String userEmail);
 
 }

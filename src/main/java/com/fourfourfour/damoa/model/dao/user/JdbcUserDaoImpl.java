@@ -46,7 +46,7 @@ public class JdbcUserDaoImpl implements UserDao {
     };
 
     @Override
-    public UserDto selectByUserEmail(String userEmail) {
+    public UserDto selectUserByUserEmail(String userEmail) {
         StringBuilder sql = new StringBuilder();
         sql
                 .append("SELECT * FROM").append(" ")
