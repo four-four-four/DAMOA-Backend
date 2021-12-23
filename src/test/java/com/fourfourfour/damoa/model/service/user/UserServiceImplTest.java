@@ -50,10 +50,13 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void testIsEmailDuplication() {
+    @DisplayName("이메일 중복 체크")
+    public void isEmailDuplication() {
         //given
+        String email = "test3@test.com";
+
         UserDto user = new UserDto();
-        user.setUserEmail("test3@test.com");
+        user.setUserEmail(email);
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
@@ -66,13 +69,13 @@ class UserServiceImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        boolean email = userService.isEmailDuplication(user.getUserEmail());
-        assertThat(email).as("[회원가입 전] 이메일이 중복됩니다.").isFalse();
+        boolean isEmail = userService.isEmailDuplication(email);
+        assertThat(isEmail).isFalse();
 
         //then
         userDao.insertUser(user);
-        boolean result = userService.isEmailDuplication(user.getUserEmail());
-        assertThat(result).as("[회원가입 후] 이메일이 중복됩니다.").isFalse();
+        boolean result = userService.isEmailDuplication(email);
+        assertThat(result).isTrue();
     }
 
     @Test
