@@ -112,18 +112,18 @@ public class JdbcUserDaoImpl implements UserDao {
     }
 
     @Override
-    public int selectEmailByEmail(String userEmail) {
+    public int selectCountByEmail(String userEmail) {
         StringBuilder sql = new StringBuilder();
         sql
                 .append("SELECT COUNT(*) FROM").append(" ")
                 .append(TABLE_NAME).append(" ")
                 .append("WHERE user_email = ?");
 
-            return jdbcTemplate.queryForObject(sql.toString(), Integer.class, userEmail);
+        return jdbcTemplate.queryForObject(sql.toString(), Integer.class, userEmail);
     }
 
     @Override
-    public int selectByNickname(String userNickname) {
+    public int selectCountByNickname(String userNickname) {
         StringBuilder sql = new StringBuilder();
         sql
                 .append("SELECT COUNT(*) FROM").append(" ")
