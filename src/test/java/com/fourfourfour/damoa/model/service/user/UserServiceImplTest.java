@@ -2,6 +2,7 @@ package com.fourfourfour.damoa.model.service.user;
 
 import com.fourfourfour.damoa.model.dao.user.UserDao;
 import com.fourfourfour.damoa.model.dto.user.UserDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,8 @@ class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
-    public void testRegister() {
+    @DisplayName("회원가입")
+    public void register() {
         //given
         UserDto user = new UserDto();
         user.setUserEmail("test@test.com");
@@ -43,8 +45,8 @@ class UserServiceImplTest {
         userService.register(user);
 
         //then
-        UserDto result = userDao.selectByUserEmail(user.getUserEmail());
-        assertThat(user).isEqualTo(result);
+        UserDto findUser = userDao.selectUserByUserEmail(user.getUserEmail());
+        assertThat(user).isEqualTo(findUser);
     }
 
     @Test
