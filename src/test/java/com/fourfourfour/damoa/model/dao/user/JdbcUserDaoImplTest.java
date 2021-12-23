@@ -47,10 +47,13 @@ class JdbcUserDaoImplTest {
     }
 
     @Test
-    public void testSelectEmailByEmail(){
+    @DisplayName("이메일 중복 체크")
+    public void selectCountByEmail(){
         //given
+        String email = "test3@test.com";
+
         UserDto user = new UserDto();
-        user.setUserEmail("test3@test.com");
+        user.setUserEmail(email);
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
@@ -63,14 +66,13 @@ class JdbcUserDaoImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        Integer emailCount = userDao.selectEmailByEmail(user.getUserEmail());
-        assertThat(emailCount).as("[회원가입 전] 이메일이 중복됩니다.").isEqualTo(0);
+        int count = userDao.selectCountByEmail(email);
+        assertThat(count).isEqualTo(0);
 
         //then
         userDao.insertUser(user);
-        Integer result = userDao.selectEmailByEmail(user.getUserEmail());
-        assertThat(result).as("[회원가입 후] 이메일이 중복됩니다.").isEqualTo(0);
-
+        int result = userDao.selectCountByEmail(email);
+        assertThat(result).isEqualTo(1);
     }
 
     @Test
