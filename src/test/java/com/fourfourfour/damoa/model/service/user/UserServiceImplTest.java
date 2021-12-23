@@ -79,14 +79,17 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void testIsNicknameDuplication() {
+    @DisplayName("닉네임 중복 체크")
+    public void isNicknameDuplication() {
         //given
+        String nickname = "테스트";
+
         UserDto user = new UserDto();
         user.setUserEmail("test3@test.com");
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
         user.setUserGender("female");
-        user.setUserNickname("테스트");
+        user.setUserNickname(nickname);
         user.setUserBirthDate(LocalDate.of(1997, 10, 11));
         user.setRole("ROLE_USER");
         user.setUserPromotionAgree(true);
@@ -95,12 +98,12 @@ class UserServiceImplTest {
         user.setUserServiceAgree(true);
 
         //when
-        boolean nickname = userService.isNicknameDuplication(user.getUserNickname());
-        assertThat(nickname).as("[회원가입 전] 닉네임이 중복됩니다.").isFalse();
+        boolean isNickname = userService.isNicknameDuplication(nickname);
+        assertThat(isNickname).isFalse();
 
         //then
         userDao.insertUser(user);
-        boolean result = userService.isNicknameDuplication(user.getUserNickname());
-        assertThat(result).as("[회원가입 후] 닉네임이 중복됩니다.").isFalse();
+        boolean result = userService.isNicknameDuplication(nickname);
+        assertThat(result).isTrue();
     }
 }
