@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isEmailDuplication(String userEmail) {
-        return userDao.selectEmailByEmail(userEmail) != 0;
+        return userDao.selectCountByEmail(userEmail) != 0;
     }
 
     @Override
     public boolean isNicknameDuplication(String userNickname) {
-        return userDao.selectByNickname(userNickname) != 0;
+        return userDao.selectCountByNickname(userNickname) != 0;
     }
 
 }
