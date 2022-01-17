@@ -2,7 +2,7 @@ package com.fourfourfour.damoa.config;
 
 import com.fourfourfour.damoa.config.jwt.JwtAuthorizationFilter;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
-import com.fourfourfour.damoa.model.dao.user.UserDao;
+import com.fourfourfour.damoa.api.user.dao.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

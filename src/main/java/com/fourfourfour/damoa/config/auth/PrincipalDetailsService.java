@@ -1,7 +1,7 @@
 package com.fourfourfour.damoa.config.auth;
 
-import com.fourfourfour.damoa.model.dao.user.UserDao;
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.user.dao.UserDao;
+import com.fourfourfour.damoa.api.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

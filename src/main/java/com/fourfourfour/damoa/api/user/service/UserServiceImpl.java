@@ -1,7 +1,7 @@
-package com.fourfourfour.damoa.model.service.user;
+package com.fourfourfour.damoa.api.user.service;
 
-import com.fourfourfour.damoa.model.dao.user.UserDao;
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.user.dao.UserDao;
+import com.fourfourfour.damoa.api.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

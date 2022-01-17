@@ -1,7 +1,8 @@
 package com.fourfourfour.damoa.model.service.user;
 
-import com.fourfourfour.damoa.model.dao.user.UserDao;
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.user.service.UserService;
+import com.fourfourfour.damoa.api.user.dao.UserDao;
+import com.fourfourfour.damoa.api.user.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

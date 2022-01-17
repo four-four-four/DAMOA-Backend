@@ -1,12 +1,12 @@
-package com.fourfourfour.damoa.controller.user;
+package com.fourfourfour.damoa.api.user.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fourfourfour.damoa.config.auth.PrincipalDetails;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
-import com.fourfourfour.damoa.model.dto.response.BasicResponseDto;
-import com.fourfourfour.damoa.model.dto.user.UserDto;
-import com.fourfourfour.damoa.model.service.user.UserService;
+import com.fourfourfour.damoa.common.dto.response.BasicResponseDto;
+import com.fourfourfour.damoa.api.user.dto.UserDto;
+import com.fourfourfour.damoa.api.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

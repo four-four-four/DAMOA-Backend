@@ -1,6 +1,6 @@
-package com.fourfourfour.damoa.model.dao.user;
+package com.fourfourfour.damoa.api.user.dao;
 
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.user.dto.UserDto;
 
 import java.util.List;
 
