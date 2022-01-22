@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.api.user.entity;
+package com.fourfourfour.damoa.api.member.entity;
 
 import com.fourfourfour.damoa.api.keyword.entity.Keyword;
 import com.fourfourfour.damoa.common.entity.BaseEntity;
@@ -16,6 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
+@Table(name = "tb_member_keyword")
 @Entity
 public class MemberKeyword extends BaseEntity {
 
