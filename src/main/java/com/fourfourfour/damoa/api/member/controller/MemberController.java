@@ -1,12 +1,12 @@
-package com.fourfourfour.damoa.api.user.controller;
+package com.fourfourfour.damoa.api.member.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fourfourfour.damoa.config.auth.PrincipalDetails;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
 import com.fourfourfour.damoa.common.dto.response.BasicResponseDto;
-import com.fourfourfour.damoa.api.user.dto.UserDto;
-import com.fourfourfour.damoa.api.user.service.UserService;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
+import com.fourfourfour.damoa.api.member.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,15 +28,15 @@ import java.util.*;
 // http://localhost:9999/swagger-ui/index.html
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v1/members")
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtProperties jwtProperties;
 
-    @Operation(summary = "all user find", description = "전체 회원 정보 조회")
+    @Operation(summary = "all member find", description = "전체 회원 정보 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "전체 회원 정보 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
@@ -54,13 +54,13 @@ public class UserController {
             파라미터 확인 or 서비스 메서드 호출 결과에 따라 응답
         */
 
-        List<UserDto> userList = userService.findAll();
+        List<MemberDto> memberList = memberService.findAll();
 
         // 회원 정보가 있는 경우
-        if (userList != null) {
+        if (memberList != null) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.OK.value())
-                    .data(userList)
+                    .data(memberList)
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
@@ -75,7 +75,7 @@ public class UserController {
 
     }
 
-    @Operation(summary = "all user remove", description = "전체 회원 정보 삭제")
+    @Operation(summary = "all member remove", description = "전체 회원 정보 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "전체 회원 정보 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
@@ -95,7 +95,7 @@ public class UserController {
 
         try {
             // 삭제 요청이 성공한 경우
-            userService.removeAll();
+            memberService.removeAll();
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
             response = BasicResponseDto.builder()
@@ -114,10 +114,11 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
-    @PostMapping()
-    public ResponseEntity register(final @Valid @RequestBody UserDto user, Errors errors) {
+    @PostMapping("/emailRegister")
+    public ResponseEntity register(final @Valid @RequestBody MemberDto memberDto, Errors errors) {
         BasicResponseDto response;
-        // user 객체 안에 값이 제대로 들어왔는지 확인
+
+        // memberDto 객체 안에 값이 제대로 들어왔는지 확인
         if (errors.hasErrors()) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -127,7 +128,7 @@ public class UserController {
         }
 
         // 이메일 중복 확인
-        if(userService.isEmailDuplication(user.getUserEmail())) {
+        if(memberService.isEmailDuplication(memberDto.getEmail())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 이메일입니다.")
@@ -136,7 +137,7 @@ public class UserController {
         }
 
         // 닉네임 중복 확인
-        if(userService.isNicknameDuplication(user.getUserNickname())) {
+        if(memberService.isNicknameDuplication(memberDto.getNickname())) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CONFLICT.value())
                     .data("사용중인 닉네임입니다.")
@@ -145,9 +146,10 @@ public class UserController {
         }
 
         try {
-            user.setUserPw(passwordEncoder.encode(user.getUserPw()));
-            user.setRole("ROLE_USER");
-            userService.register(user);
+            System.out.println(memberDto);
+            memberDto.setPw(passwordEncoder.encode(memberDto.getPw()));
+            memberDto.setRole("ROLE_member");
+            memberService.register(memberDto);
             response = BasicResponseDto.builder()
                     .status(HttpStatus.CREATED.value())
                     .data("회원가입 되었습니다.")
@@ -170,9 +172,9 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @PostMapping("/login")
-    protected ResponseEntity login(@RequestBody UserDto user) {
+    protected ResponseEntity login(@RequestBody MemberDto member) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.getUserEmail(), user.getUserPw());
+                new UsernamePasswordAuthenticationToken(member.getEmail(), member.getPw());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
@@ -180,7 +182,7 @@ public class UserController {
         String jwtToken = JWT.create()
                 .withSubject("token")
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getTokenValidityInMilliseconds()))
-                .withClaim(jwtProperties.getCLAIM(), principalDetails.getUser().getUserEmail())
+                .withClaim(jwtProperties.getCLAIM(), principalDetails.getMemberDto().getEmail())
                 .sign(Algorithm.HMAC512(jwtProperties.getJwtKey()));
 
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -188,7 +190,7 @@ public class UserController {
 
         Map<String, Object> responseData = new HashMap<>();
         responseData.put("jwtToken", jwtToken);
-        responseData.put("role", principalDetails.getUser().getRole());
+        responseData.put("role", principalDetails.getMemberDto().getRole());
 
         BasicResponseDto response = BasicResponseDto.builder()
                 .status(200)
@@ -205,24 +207,21 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "이메일이 중복되지 않습니다"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
-    @PostMapping("/email/{userEmail}/exists")
-    public ResponseEntity checkEmailDuplicate(@PathVariable String userEmail) {
+    @GetMapping("/email/{memberEmail}/exists")
+    public ResponseEntity checkEmailDuplicate(@PathVariable String memberEmail) {
         BasicResponseDto response;
 
         // 이메일 중복 확인
-        if(userService.isEmailDuplication(userEmail)) {
+//        if(memberService.isEmailDuplication(memberEmail)) {
+        if(false) {
             response = BasicResponseDto.builder()
-                    .status(HttpStatus.CONFLICT.value())
+                    .status(HttpStatus.OK.value())
                     .data("사용중인 이메일입니다.")
                     .build();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         else {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .data("이메일이 중복되지 않습니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
 
@@ -233,24 +232,21 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "닉네임이 중복되지 않습니다"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
-    @PostMapping("/nickname/{userNickname}/exists")
-    public ResponseEntity checkNicknameDuplicate(@PathVariable String userNickname) {
+    @GetMapping("/nickname/{memberNickname}/exists")
+    public ResponseEntity checkNicknameDuplicate(@PathVariable String memberNickname) {
         BasicResponseDto response;
 
         // 닉네임 중복 확인
-        if(userService.isNicknameDuplication(userNickname)) {
+//        if(memberService.isNicknameDuplication(memberNickname)) {
+        if(false) {
             response = BasicResponseDto.builder()
-                    .status(HttpStatus.CONFLICT.value())
+                    .status(HttpStatus.OK.value())
                     .data("사용중인 닉네임입니다.")
                     .build();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         else {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .data("닉네임이 중복되지 않습니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
 }
