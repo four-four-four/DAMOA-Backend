@@ -9,5 +9,8 @@ import javax.persistence.MappedSuperclass;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseDeletedEntity {
+public class BaseDeletedEntity extends BaseEntity {
+
+    private boolean isDeleted;
+
 }
