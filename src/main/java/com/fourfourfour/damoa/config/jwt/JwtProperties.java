@@ -14,6 +14,6 @@ public class JwtProperties {
     private long tokenValidityInMilliseconds;
     private final String HEADER = "Authorization";
     private final String PREFIX = "Bearer ";
-    private final String CLAIM = "userEmail";
+    private final String CLAIM = "memberEmail";
 
 }

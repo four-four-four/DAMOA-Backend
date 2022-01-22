@@ -3,8 +3,8 @@ package com.fourfourfour.damoa.config.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fourfourfour.damoa.config.auth.PrincipalDetails;
-import com.fourfourfour.damoa.api.user.dao.UserDao;
-import com.fourfourfour.damoa.api.user.dto.UserDto;
+import com.fourfourfour.damoa.api.member.dao.MemberDao;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,10 +28,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final UserDao userDao;
+    private final MemberDao userDao;
     private final JwtProperties jwtProperties;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDao userDao, JwtProperties jwtProperties) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberDao userDao, JwtProperties jwtProperties) {
         super(authenticationManager);
         this.userDao = userDao;
         this.jwtProperties = jwtProperties;
@@ -53,14 +53,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
          * JWT 토큰을 검증해서 정상적인 사용자인지 확인
          */
         String jwtToken = jwtHeader.replace(jwtProperties.getPREFIX(), "");
-        String userEmail = JWT.require(Algorithm.HMAC512(jwtProperties.getJwtKey())).build().verify(jwtToken).getClaim(jwtProperties.getCLAIM()).asString();
+        String memberEmail = JWT.require(Algorithm.HMAC512(jwtProperties.getJwtKey())).build().verify(jwtToken).getClaim(jwtProperties.getCLAIM()).asString();
 
-        if (userEmail != null) {
-            System.out.println("userEmail 정상 : " + userEmail);
-            UserDto user = userDao.selectUserByUserEmail(userEmail);
+        if (memberEmail != null) {
+            System.out.println("memberEmail 정상 : " + memberEmail);
+            MemberDto user = userDao.selectUserByUserEmail(memberEmail);
 
             PrincipalDetails principalDetails = new PrincipalDetails(user);
-            System.out.println("principalDetails : " + principalDetails.getUser().getUserEmail());
+            System.out.println("principalDetails : " + principalDetails.getMemberDto().getEmail());
 
             /**
              * Jwt 토큰 서명을 통해서 서명이 정상이면 Authentication 객체륾 만들어준다.
