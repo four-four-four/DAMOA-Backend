@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.api.user.dto;
+package com.fourfourfour.damoa.api.member.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

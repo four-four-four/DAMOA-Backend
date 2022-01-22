@@ -1,6 +1,6 @@
-package com.fourfourfour.damoa.api.user.dao;
+package com.fourfourfour.damoa.api.member.dao;
 
-import com.fourfourfour.damoa.api.user.dto.UserDto;
+import com.fourfourfour.damoa.api.member.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
