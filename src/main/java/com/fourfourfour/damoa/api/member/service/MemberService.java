@@ -1,14 +1,14 @@
 package com.fourfourfour.damoa.api.member.service;
 
-import com.fourfourfour.damoa.api.member.dto.UserDto;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 
 import java.util.List;
 
-public interface UserService {
+public interface MemberService {
 
-    List<UserDto> findAll();
+    List<MemberDto> findAll();
     void removeAll();
-    void register(UserDto user);
+    void register(MemberDto user);
     boolean isEmailDuplication(String UserEmail);
     boolean isNicknameDuplication(String userNickname);
 

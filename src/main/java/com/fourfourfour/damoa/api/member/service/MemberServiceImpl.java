@@ -1,20 +1,20 @@
 package com.fourfourfour.damoa.api.member.service;
 
-import com.fourfourfour.damoa.api.member.dao.UserDao;
-import com.fourfourfour.damoa.api.member.dto.UserDto;
+import com.fourfourfour.damoa.api.member.dao.MemberDao;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class MemberServiceImpl implements MemberService {
 
     @Autowired
-    private UserDao userDao;
+    private MemberDao userDao;
 
     @Override
-    public List<UserDto> findAll() {
+    public List<MemberDto> findAll() {
         return userDao.selectAll();
     }
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void register(UserDto user) {
+    public void register(MemberDto user) {
         userDao.insertUser(user);
     }
 
