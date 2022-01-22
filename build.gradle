@@ -1,6 +1,16 @@
+// querydsl 추가
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
+
 plugins {
 	id 'org.springframework.boot' version '2.5.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	// querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
 }
 
@@ -21,9 +31,19 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// jpa 추가
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	// p6spy 추가
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+
+
 	// spring security
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.5.1'
-	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '5.3.12.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	// jwt
 	implementation group: 'com.auth0', name: 'java-jwt', version: '3.18.2'
@@ -40,3 +60,27 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+// querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+// querydsl 추가 끝
