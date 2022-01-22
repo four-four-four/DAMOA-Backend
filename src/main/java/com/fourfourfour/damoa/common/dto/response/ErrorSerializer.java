@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.model.dto.response;
+package com.fourfourfour.damoa.common.dto.response;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

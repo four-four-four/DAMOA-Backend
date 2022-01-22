@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.model.dto.response;
+package com.fourfourfour.damoa.common.dto.response;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

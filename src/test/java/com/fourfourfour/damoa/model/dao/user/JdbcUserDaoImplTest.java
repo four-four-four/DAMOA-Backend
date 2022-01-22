@@ -1,6 +1,7 @@
 package com.fourfourfour.damoa.model.dao.user;
 
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.member.dao.MemberDao;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,33 +18,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JdbcUserDaoImplTest {
 
     @Autowired
-    private UserDao userDao;
+    private MemberDao userDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("회원가입")
-    public void insertUser(){
+    public void insertMember(){
         //given
-        UserDto user = new UserDto();
-        user.setUserEmail("test@test.com");
-        user.setUserPw(passwordEncoder.encode("5555"));
-        user.setUserJob("대학생");
-        user.setUserGender("female");
-        user.setUserNickname("테스트");
-        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
-        user.setRole("ROLE_USER");
-        user.setUserPromotionAgree(true);
-        user.setUserPrivacyAgree(true);
-        user.setUserLocationAgree(true);
-        user.setUserServiceAgree(true);
+        MemberDto memberDto = new MemberDto();
+        memberDto.setEmail("test@test.com");
+        memberDto.setPw(passwordEncoder.encode("5555"));
+        memberDto.setJob("대학생");
+        memberDto.setGender("female");
+        memberDto.setNickname("테스트");
+        memberDto.setBirthDate(LocalDate.of(1997, 10, 11));
+        memberDto.setRole("ROLE_USER");
+        memberDto.setServiceTerm(true);
+        memberDto.setPrivacyTerm(true);
 
         //when
-        userDao.insertUser(user);
+        userDao.insertUser(memberDto);
 
         //then
-        UserDto findUser = userDao.selectUserByUserEmail(user.getUserEmail());
-        assertThat(user).isEqualTo(findUser);
+        MemberDto findUser = userDao.selectUserByUserEmail(memberDto.getEmail());
+        assertThat(memberDto).isEqualTo(findUser);
     }
 
     @Test
@@ -52,25 +51,23 @@ class JdbcUserDaoImplTest {
         //given
         String email = "test3@test.com";
 
-        UserDto user = new UserDto();
-        user.setUserEmail(email);
-        user.setUserPw(passwordEncoder.encode("5555"));
-        user.setUserJob("대학생");
-        user.setUserGender("female");
-        user.setUserNickname("테스트");
-        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
-        user.setRole("ROLE_USER");
-        user.setUserPromotionAgree(true);
-        user.setUserPrivacyAgree(true);
-        user.setUserLocationAgree(true);
-        user.setUserServiceAgree(true);
+        MemberDto memberDto = new MemberDto();
+        memberDto.setEmail(email);
+        memberDto.setPw(passwordEncoder.encode("5555"));
+        memberDto.setJob("대학생");
+        memberDto.setGender("female");
+        memberDto.setNickname("테스트");
+        memberDto.setBirthDate(LocalDate.of(1997, 10, 11));
+        memberDto.setRole("ROLE_USER");
+        memberDto.setServiceTerm(true);
+        memberDto.setPrivacyTerm(true);
 
         //when
         int count = userDao.selectCountByEmail(email);
         assertThat(count).isEqualTo(0);
 
         //then
-        userDao.insertUser(user);
+        userDao.insertUser(memberDto);
         int result = userDao.selectCountByEmail(email);
         assertThat(result).isEqualTo(1);
     }
@@ -81,25 +78,23 @@ class JdbcUserDaoImplTest {
         //given
         String nickname = "테스트";
 
-        UserDto user = new UserDto();
-        user.setUserEmail("test3@test.com");
-        user.setUserPw(passwordEncoder.encode("5555"));
-        user.setUserJob("대학생");
-        user.setUserGender("female");
-        user.setUserNickname(nickname);
-        user.setUserBirthDate(LocalDate.of(1997, 10, 11));
-        user.setRole("ROLE_USER");
-        user.setUserPromotionAgree(true);
-        user.setUserPrivacyAgree(true);
-        user.setUserLocationAgree(true);
-        user.setUserServiceAgree(true);
+        MemberDto memberDto = new MemberDto();
+        memberDto.setEmail("test3@test.com");
+        memberDto.setPw(passwordEncoder.encode("5555"));
+        memberDto.setJob("대학생");
+        memberDto.setGender("female");
+        memberDto.setNickname(nickname);
+        memberDto.setBirthDate(LocalDate.of(1997, 10, 11));
+        memberDto.setRole("ROLE_USER");
+        memberDto.setServiceTerm(true);
+        memberDto.setPrivacyTerm(true);
 
         //when
         int count = userDao.selectCountByNickname(nickname);
         assertThat(count).isEqualTo(0);
 
         //then
-        userDao.insertUser(user);
+        userDao.insertUser(memberDto);
         int result = userDao.selectCountByNickname(nickname);
         assertThat(result).isEqualTo(1);
     }

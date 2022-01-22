@@ -1,6 +1,6 @@
 package com.fourfourfour.damoa.config.auth;
 
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,28 +11,28 @@ import java.util.Collection;
 @Data
 public class PrincipalDetails implements UserDetails {
 
-    private UserDto user;
+    private MemberDto memberDto;
 
-    public PrincipalDetails(UserDto user) {
-        this.user = user;
+    public PrincipalDetails(MemberDto memberDto) {
+        this.memberDto = memberDto;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        System.out.println("PrincipalDetails collection role : " + user.getRole());
-        collection.add(() -> user.getRole());
+        System.out.println("PrincipalDetails collection role : " + memberDto.getRole());
+        collection.add(() -> memberDto.getRole());
         return collection;
     }
 
     @Override
     public String getPassword() {
-        return user.getUserPw();
+        return memberDto.getPw();
     }
 
     @Override
     public String getUsername() {
-        return user.getUserEmail();
+        return memberDto.getEmail();
     }
 
     /**

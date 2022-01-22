@@ -1,7 +1,8 @@
 package com.fourfourfour.damoa.model.service.user;
 
-import com.fourfourfour.damoa.model.dao.user.UserDao;
-import com.fourfourfour.damoa.model.dto.user.UserDto;
+import com.fourfourfour.damoa.api.member.service.MemberService;
+import com.fourfourfour.damoa.api.member.dao.MemberDao;
+import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserServiceImplTest {
 
     @Autowired
-    UserService userService;
+    MemberService userService;
     @Autowired
-    UserDao userDao;
+    MemberDao userDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -28,7 +29,7 @@ class UserServiceImplTest {
     @DisplayName("회원가입")
     public void register() {
         //given
-        UserDto user = new UserDto();
+        MemberDto user = new MemberDto();
         user.setUserEmail("test@test.com");
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
@@ -45,7 +46,7 @@ class UserServiceImplTest {
         userService.register(user);
 
         //then
-        UserDto findUser = userDao.selectUserByUserEmail(user.getUserEmail());
+        MemberDto findUser = userDao.selectUserByUserEmail(user.getUserEmail());
         assertThat(user).isEqualTo(findUser);
     }
 
@@ -55,7 +56,7 @@ class UserServiceImplTest {
         //given
         String email = "test3@test.com";
 
-        UserDto user = new UserDto();
+        MemberDto user = new MemberDto();
         user.setUserEmail(email);
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");
@@ -84,7 +85,7 @@ class UserServiceImplTest {
         //given
         String nickname = "테스트";
 
-        UserDto user = new UserDto();
+        MemberDto user = new MemberDto();
         user.setUserEmail("test3@test.com");
         user.setUserPw(passwordEncoder.encode("5555"));
         user.setUserJob("대학생");

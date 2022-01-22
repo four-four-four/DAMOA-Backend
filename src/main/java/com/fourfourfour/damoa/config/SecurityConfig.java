@@ -2,7 +2,7 @@ package com.fourfourfour.damoa.config;
 
 import com.fourfourfour.damoa.config.jwt.JwtAuthorizationFilter;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
-import com.fourfourfour.damoa.model.dao.user.UserDao;
+import com.fourfourfour.damoa.api.member.dao.MemberDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
-    private final UserDao userDao;
+    private final MemberDao userDao;
     private final JwtProperties jwtProperties;
 
     @Bean
@@ -80,11 +80,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 /**
                  * 로그인 URI는 모든 사용자에게 허용
                  */
-                .antMatchers("/**/api/v1/users/login").permitAll()
+                .antMatchers("/**/api/v1/members/login").permitAll()
                 /**
                  * 회원가입 URI는 모든 사용자에게 허용
                  */
-                .antMatchers(HttpMethod.POST, "/api/**/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/**/members").permitAll()
+                .antMatchers("/api/**/members/**").permitAll()
                 /**
                  * 나머지 요청은 모두 인증되어야 한다.
                  */
