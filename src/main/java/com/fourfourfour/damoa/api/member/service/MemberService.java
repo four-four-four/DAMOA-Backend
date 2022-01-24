@@ -9,7 +9,7 @@ public interface MemberService {
     List<MemberDto> findAll();
     void removeAll();
     void register(MemberDto user);
-    boolean isEmailDuplication(String UserEmail);
     boolean isNicknameDuplication(String userNickname);
+    boolean isEmailDuplication(String memberEmail);
 
 }
