@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isEmailDuplication(String memberEmail) {
-        return memberRepository.countByEmail(memberEmail) != 0;
+        return memberRepository.existsByEmail(memberEmail);
     }
 
     @Override
