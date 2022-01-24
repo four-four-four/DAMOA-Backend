@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isNicknameDuplication(String memberNickname) {
-        return memberRepository.countByNickname(memberNickname) != 0;
+        return memberRepository.existsByNickname(memberNickname);
     }
 
 }
