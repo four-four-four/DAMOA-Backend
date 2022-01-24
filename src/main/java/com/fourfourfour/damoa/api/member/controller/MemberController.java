@@ -236,8 +236,7 @@ public class MemberController {
         BasicResponseDto response;
 
         // 닉네임 중복 확인
-//        if(memberService.isNicknameDuplication(memberNickname)) {
-        if(false) {
+        if(memberService.isNicknameDuplication(memberNickname)) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.OK.value())
                     .data("사용중인 닉네임입니다.")
