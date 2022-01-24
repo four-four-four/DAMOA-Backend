@@ -2,6 +2,7 @@ package com.fourfourfour.damoa.api.member.service;
 
 import com.fourfourfour.damoa.api.member.dao.MemberDao;
 import com.fourfourfour.damoa.api.member.dto.MemberDto;
+import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberDao userDao;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Override
     public List<MemberDto> findAll() {
@@ -29,13 +33,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean isEmailDuplication(String userEmail) {
-        return userDao.selectCountByEmail(userEmail) != 0;
+    public boolean isEmailDuplication(String memberEmail) {
+        return memberRepository.countByEmail(memberEmail) != 0;
     }
 
     @Override
-    public boolean isNicknameDuplication(String userNickname) {
-        return userDao.selectCountByNickname(userNickname) != 0;
+    public boolean isNicknameDuplication(String memberNickname) {
+        return memberRepository.countByNickname(memberNickname) != 0;
     }
 
 }
