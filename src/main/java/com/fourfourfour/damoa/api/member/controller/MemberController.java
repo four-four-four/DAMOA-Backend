@@ -202,9 +202,9 @@ public class MemberController {
 
     @ApiOperation(value="이메일 중복 체크", response = BasicResponseDto.class)
     @ApiResponses({
-            @ApiResponse(responseCode = "303", description = "이메일 중복"),
+            @ApiResponse(responseCode = "200", description = "이메일 중복"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "404", description = "이메일이 중복되지 않습니다"),
+            @ApiResponse(responseCode = "204", description = "이메일이 중복되지 않습니다"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @GetMapping("/email/{memberEmail}/exists")
