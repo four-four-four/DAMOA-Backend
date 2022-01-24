@@ -212,8 +212,7 @@ public class MemberController {
         BasicResponseDto response;
 
         // 이메일 중복 확인
-//        if(memberService.isEmailDuplication(memberEmail)) {
-        if(false) {
+        if(memberService.isEmailDuplication(memberEmail)) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.OK.value())
                     .data("사용중인 이메일입니다.")
