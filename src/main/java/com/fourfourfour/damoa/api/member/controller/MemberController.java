@@ -202,9 +202,9 @@ public class MemberController {
 
     @ApiOperation(value="이메일 중복 체크", response = BasicResponseDto.class)
     @ApiResponses({
-            @ApiResponse(responseCode = "303", description = "이메일 중복"),
+            @ApiResponse(responseCode = "200", description = "이메일 중복"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "404", description = "이메일이 중복되지 않습니다"),
+            @ApiResponse(responseCode = "204", description = "이메일이 중복되지 않습니다"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @GetMapping("/email/{memberEmail}/exists")
@@ -212,8 +212,7 @@ public class MemberController {
         BasicResponseDto response;
 
         // 이메일 중복 확인
-//        if(memberService.isEmailDuplication(memberEmail)) {
-        if(false) {
+        if(memberService.isEmailDuplication(memberEmail)) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.OK.value())
                     .data("사용중인 이메일입니다.")
@@ -227,9 +226,9 @@ public class MemberController {
 
     @ApiOperation(value="닉네임 중복 체크", response = BasicResponseDto.class)
     @ApiResponses({
-            @ApiResponse(responseCode = "303", description = "닉네임 중복"),
+            @ApiResponse(responseCode = "200", description = "닉네임 중복"),
             @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-            @ApiResponse(responseCode = "404", description = "닉네임이 중복되지 않습니다"),
+            @ApiResponse(responseCode = "204", description = "닉네임이 중복되지 않습니다"),
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @GetMapping("/nickname/{memberNickname}/exists")
@@ -237,8 +236,7 @@ public class MemberController {
         BasicResponseDto response;
 
         // 닉네임 중복 확인
-//        if(memberService.isNicknameDuplication(memberNickname)) {
-        if(false) {
+        if(memberService.isNicknameDuplication(memberNickname)) {
             response = BasicResponseDto.builder()
                     .status(HttpStatus.OK.value())
                     .data("사용중인 닉네임입니다.")
