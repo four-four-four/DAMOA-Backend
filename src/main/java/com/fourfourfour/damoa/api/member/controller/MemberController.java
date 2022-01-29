@@ -204,6 +204,12 @@ public class MemberController {
     @GetMapping("/email/{memberEmail}/exists")
     public BasicResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
         BasicResponseDto response;
+        String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
+
+        if(!memberEmail.matches(emailChk)) {
+            status = HttpStatus.BAD_REQUEST.value();
+            responseData.put("message", "이메일을 올바르게 작성해주세요.");
+        }
 
         // 이메일 중복 확인
         if(memberService.isEmailDuplication(memberEmail)) {
