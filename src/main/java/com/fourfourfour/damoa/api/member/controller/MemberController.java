@@ -117,51 +117,45 @@ public class MemberController {
     @PostMapping("/emailRegister")
     public BasicResponseDto register(final @Valid @RequestBody MemberDto memberDto, Errors errors) {
         BasicResponseDto response;
+        Integer status = null;
+        Map<String, Object> responseData = new HashMap<>();
 
         // memberDto 객체 안에 값이 제대로 들어왔는지 확인
         if (errors.hasErrors()) {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .data(errors)
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            status = HttpStatus.BAD_REQUEST.value();
+            responseData.put("message", "요청을 수행할 수 없습니다.");
+            responseData.put("error", errors);
         }
 
         // 이메일 중복 확인
-        if(memberService.isEmailDuplication(memberDto.getEmail())) {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.CONFLICT.value())
-                    .data("사용중인 이메일입니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        else if(memberService.isEmailDuplication(memberDto.getEmail())) {
+            status = HttpStatus.CONFLICT.value();
+            responseData.put("message", "사용중인 이메일입니다.");
         }
 
         // 닉네임 중복 확인
-        if(memberService.isNicknameDuplication(memberDto.getNickname())) {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.CONFLICT.value())
-                    .data("사용중인 닉네임입니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        else if(memberService.isNicknameDuplication(memberDto.getNickname())) {
+            status = HttpStatus.CONFLICT.value();
+            responseData.put("message", "사용중인 닉네임입니다.");
         }
 
-        try {
-            System.out.println(memberDto);
-            memberDto.setPw(passwordEncoder.encode(memberDto.getPw()));
-            memberDto.setRole("ROLE_member");
-            memberService.register(memberDto);
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.CREATED.value())
-                    .data("회원가입 되었습니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .data("잘못된 요청입니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        else {
+            try {
+                memberDto.setPw(passwordEncoder.encode(memberDto.getPw()));
+                memberDto.setRole("ROLE_member");
+                memberService.register(memberDto);
+                status = HttpStatus.CREATED.value();
+                responseData.put("message", "회원가입 되었습니다.");
+            } catch (Exception e) {
+                status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+                responseData.put("message", "요청을 수행할 수 없습니다.");
+            }
         }
+
+        return BasicResponseDto.builder()
+                .status(status)
+                .data(responseData)
+                .build();
     }
 
     @ApiOperation(value="로그인", response = BasicResponseDto.class)
