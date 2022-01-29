@@ -202,7 +202,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @GetMapping("/email/{memberEmail}/exists")
-    public ResponseEntity checkEmailDuplicate(@PathVariable String memberEmail) {
+    public BasicResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
         BasicResponseDto response;
 
         // 이메일 중복 확인
