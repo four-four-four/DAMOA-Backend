@@ -115,7 +115,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 장애 발생")
     })
     @PostMapping("/emailRegister")
-    public ResponseEntity register(final @Valid @RequestBody MemberDto memberDto, Errors errors) {
+    public BasicResponseDto register(final @Valid @RequestBody MemberDto memberDto, Errors errors) {
         BasicResponseDto response;
 
         // memberDto 객체 안에 값이 제대로 들어왔는지 확인
