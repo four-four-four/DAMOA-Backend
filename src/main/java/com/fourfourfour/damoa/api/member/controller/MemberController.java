@@ -204,6 +204,9 @@ public class MemberController {
     @GetMapping("/email/{memberEmail}/exists")
     public BasicResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
         BasicResponseDto response;
+        Integer status = null;
+        Map<String, Object> responseData = new HashMap<>();
+
         String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
 
         if(!memberEmail.matches(emailChk)) {
@@ -213,15 +216,17 @@ public class MemberController {
 
         // 이메일 중복 확인
         if(memberService.isEmailDuplication(memberEmail)) {
-            response = BasicResponseDto.builder()
-                    .status(HttpStatus.OK.value())
-                    .data("사용중인 이메일입니다.")
-                    .build();
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            status = HttpStatus.OK.value();
+            responseData.put("message", "사용중인 이메일입니다.");
         }
         else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            status = HttpStatus.NO_CONTENT.value();
         }
+
+        return BasicResponseDto.builder()
+                .status(status)
+                .data(responseData)
+                .build();
     }
 
     @ApiOperation(value="닉네임 중복 체크", response = BasicResponseDto.class)
