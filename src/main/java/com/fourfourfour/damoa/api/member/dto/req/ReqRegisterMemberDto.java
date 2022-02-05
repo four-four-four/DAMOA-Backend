@@ -1,5 +1,6 @@
 package com.fourfourfour.damoa.api.member.dto.req;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -33,4 +34,15 @@ public class ReqRegisterMemberDto {
 
     private String role;
 
+    @Builder
+    public ReqRegisterMemberDto(String email, String password, String nickname, String gender, LocalDate birthDate, String job, boolean serviceTerm, boolean privacyTerm) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.job = job;
+        this.serviceTerm = serviceTerm;
+        this.privacyTerm = privacyTerm;
+    }
 }
