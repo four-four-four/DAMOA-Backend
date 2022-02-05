@@ -52,6 +52,26 @@ class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("닉네임 중복 체크")
     void existsByNickname() {
+        String memberNickname = "백엔드테스트";
+
+        boolean isEmail = memberRepository.existsByNickname(memberNickname);
+        assertThat(isEmail).isFalse();
+
+        memberRepository.save(Member.builder()
+                .email("test@test.com")
+                .password(passwordEncoder.encode("Abcdefg1!"))
+                .nickname(memberNickname)
+                .gender("female")
+                .birthDate(LocalDateTime.of(LocalDate.of(1997, 10, 11), LocalTime.now()))
+                .job("대학생")
+                .role("ROLE_member")
+                .serviceTerm(true)
+                .privacyTerm(true)
+                .build());
+
+        boolean result = memberRepository.existsByNickname(memberNickname);
+        assertThat(result).isTrue();
     }
 }
