@@ -13,7 +13,7 @@ public class ReqRegisterMemberDto {
     @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "이메일을 올바르게 작성해주세요.")
     private String email;
 
-    @NotNull(message = "필수 사항입니다.")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\W)(?=\\S+$).{8,20}$", message = "비밀번호를 올바르게 작성해주세요.")
     private String password;
 
     @NotNull(message = "필수 사항입니다.")
