@@ -1,8 +1,6 @@
 package com.fourfourfour.damoa.api.member.repository;
 
-import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
 import com.fourfourfour.damoa.api.member.entity.Member;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
