@@ -1,8 +1,8 @@
 package com.fourfourfour.damoa.config;
 
+import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import com.fourfourfour.damoa.config.jwt.JwtAuthorizationFilter;
 import com.fourfourfour.damoa.config.jwt.JwtProperties;
-import com.fourfourfour.damoa.api.member.dao.MemberDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
-    private final MemberDao userDao;
+    private final MemberRepository memberRepository;
     private final JwtProperties jwtProperties;
 
     @Bean
@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  */
                 .addFilter(corsFilter)
 
-                .formLogin().disable()
+//                .formLogin().disable()
 
                 /**
                  * 토큰 방식을 사용하므로
@@ -71,24 +71,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                  * 로그인 필터 등록
                  */
                 .addFilterBefore(
-                        new JwtAuthorizationFilter(authenticationManager(), userDao, jwtProperties),
+                        new JwtAuthorizationFilter(authenticationManager(), memberRepository, jwtProperties),
                         UsernamePasswordAuthenticationFilter.class
                 )
 
                 .authorizeRequests()
-
-                /**
-                 * 로그인 URI는 모든 사용자에게 허용
-                 */
-                .antMatchers("/**/api/v1/members/login").permitAll()
-                /**
-                 * 회원가입 URI는 모든 사용자에게 허용
-                 */
-                .antMatchers(HttpMethod.POST, "/api/**/members").permitAll()
-                .antMatchers("/api/**/members/**").permitAll()
-                /**
-                 * 나머지 요청은 모두 인증되어야 한다.
-                 */
+                .antMatchers(HttpMethod.POST, "/api/v1/members/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/members/email-register").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/members/email/*/exists").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/members/nickname/*/exists").permitAll()
                 .anyRequest().authenticated()
         ;
     }

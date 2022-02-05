@@ -2,9 +2,9 @@ package com.fourfourfour.damoa.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fourfourfour.damoa.api.member.entity.Member;
+import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import com.fourfourfour.damoa.config.auth.PrincipalDetails;
-import com.fourfourfour.damoa.api.member.dao.MemberDao;
-import com.fourfourfour.damoa.api.member.dto.MemberDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,12 +28,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
-    private final MemberDao userDao;
+    private final MemberRepository memberRepository;
     private final JwtProperties jwtProperties;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberDao userDao, JwtProperties jwtProperties) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, MemberRepository memberRepository, JwtProperties jwtProperties) {
         super(authenticationManager);
-        this.userDao = userDao;
+        this.memberRepository = memberRepository;
         this.jwtProperties = jwtProperties;
     }
 
@@ -57,10 +57,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if (memberEmail != null) {
             System.out.println("memberEmail 정상 : " + memberEmail);
-            MemberDto user = userDao.selectUserByUserEmail(memberEmail);
+            Member member = memberRepository.findByEmail(memberEmail);
 
-            PrincipalDetails principalDetails = new PrincipalDetails(user);
-            System.out.println("principalDetails : " + principalDetails.getMemberDto().getEmail());
+            PrincipalDetails principalDetails = new PrincipalDetails(member);
+            System.out.println("principalDetails : " + principalDetails.getUsername());
 
             /**
              * Jwt 토큰 서명을 통해서 서명이 정상이면 Authentication 객체륾 만들어준다.
