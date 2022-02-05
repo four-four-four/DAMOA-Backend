@@ -141,6 +141,12 @@ public class MemberController {
 
         // 닉네임 중복 확인
         if(memberService.isNicknameDuplication(memberNickname)) {
+        String nickChk = "^[0-9|a-z|A-Z|가-힣|\\s]{4,10}$";
+
+        if (!memberNickname.matches(nickChk)) {
+            status = HttpStatus.BAD_REQUEST.value();
+            responseData.put("message", "닉네임을 올바르게 작성해주세요.");
+        }
             status = HttpStatus.OK.value();
             responseData.put("message", "사용중인 닉네임입니다.");
         } else {
