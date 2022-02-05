@@ -54,8 +54,8 @@ class MemberRepositoryTest {
     void existsByNickname() {
         String memberNickname = "백엔드테스트";
 
-        boolean isEmail = memberRepository.existsByNickname(memberNickname);
-        assertThat(isEmail).isFalse();
+        boolean isNickname = memberRepository.existsByNickname(memberNickname);
+        assertThat(isNickname).isFalse();
 
         memberRepository.save(Member.builder()
                 .email("test@test.com")
