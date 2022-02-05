@@ -1,21 +1,17 @@
-package com.fourfourfour.damoa.api.member.dto;
+package com.fourfourfour.damoa.api.member.dto.req;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @ApiModel(value = "UserDto : 회원 정보", description = "회원 정보를 가집니다.")
-@Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class MemberDto {
-
-    @ApiModelProperty(value = "식별자")
-    private Long id;
+@Getter
+public class ReqMemberDto {
 
     @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "이메일을 올바르게 작성해주세요.")
     @ApiModelProperty(value = "이메일")
@@ -23,7 +19,7 @@ public class MemberDto {
 
     @NotNull(message = "필수 사항입니다.")
     @ApiModelProperty(value = "패스워드")
-    private String pw;
+    private String password;
 
     @NotNull(message = "필수 사항입니다.")
     @Size(min = 4, max = 10, message = "닉네임은 4자 이상 10자 이하로 입력해주세요")
