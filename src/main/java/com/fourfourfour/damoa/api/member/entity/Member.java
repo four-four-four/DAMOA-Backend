@@ -13,8 +13,6 @@ import java.util.List;
 import static lombok.AccessLevel.*;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_member", uniqueConstraints = {@UniqueConstraint(name = "email_unique", columnNames = "email")})
 @Entity
@@ -27,7 +25,7 @@ public class Member extends BaseDeletedEntity {
     @Column(nullable = false, length = 30)
     private String email;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false, length = 80)
@@ -36,6 +34,7 @@ public class Member extends BaseDeletedEntity {
     @Column(length = 20)
     private String gender;
 
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime birthDate;
 
     @Column(length = 50)
@@ -55,5 +54,18 @@ public class Member extends BaseDeletedEntity {
 
     @OneToMany(mappedBy = "member")
     private List<Notice> notices = new ArrayList<>();
+
+    @Builder
+    public Member(String email, String password, String nickname, String gender, LocalDateTime birthDate, String job, boolean serviceTerm, boolean privacyTerm, String role) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.job = job;
+        this.serviceTerm = serviceTerm;
+        this.privacyTerm = privacyTerm;
+        this.role = role;
+    }
 
 }
