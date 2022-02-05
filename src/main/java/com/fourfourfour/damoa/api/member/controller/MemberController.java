@@ -116,13 +116,11 @@ public class MemberController {
 
         String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
 
-        if(!memberEmail.matches(emailChk)) {
+        if (!memberEmail.matches(emailChk)) {
             status = HttpStatus.BAD_REQUEST.value();
             responseData.put("message", "이메일을 올바르게 작성해주세요.");
         }
-
-        // 이메일 중복 확인
-        if(memberService.isEmailDuplication(memberEmail)) {
+        else if (memberService.isEmailDuplication(memberEmail)) {
             status = HttpStatus.OK.value();
             responseData.put("message", "사용중인 이메일입니다.");
         }
