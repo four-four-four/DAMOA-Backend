@@ -139,9 +139,9 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        String nickChk = "^[0-9|a-z|A-Z|가-힣|\\s]{4,10}$";
+        String nicknameChk = "^[0-9|a-z|A-Z|가-힣|\\s]{4,10}$";
 
-        if (!memberNickname.matches(nickChk)) {
+        if (!memberNickname.matches(nicknameChk)) {
             status = HttpStatus.BAD_REQUEST.value();
             responseData.put("message", "닉네임을 올바르게 작성해주세요.");
         }
