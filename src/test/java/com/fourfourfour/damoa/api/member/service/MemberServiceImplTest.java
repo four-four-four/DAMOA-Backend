@@ -38,12 +38,12 @@ class MemberServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
-        boolean isEmail = memberService.isEmailDuplication(email);
-        assertThat(isEmail).isFalse();
+        boolean isUsingEmail = memberService.isEmailDuplication(email);
+        assertThat(isUsingEmail).isFalse();
 
         memberService.register(reqMember);
-        boolean result = memberService.isEmailDuplication(email);
-        assertThat(result).isTrue();
+        isUsingEmail = memberService.isEmailDuplication(email);
+        assertThat(isUsingEmail).isTrue();
     }
 
     @Test
