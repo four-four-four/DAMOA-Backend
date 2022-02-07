@@ -28,13 +28,13 @@ class MemberRepositoryTest {
     @Test
     @DisplayName("이메일 중복 체크")
     void existsByEmail() {
-        String memberEmail = "test@test.com";
+        String email = "test@test.com";
 
-        boolean isEmail = memberRepository.existsByEmail(memberEmail);
-        assertThat(isEmail).isFalse();
+        boolean hasEmail = memberRepository.existsByEmail(email);
+        assertThat(hasEmail).isFalse();
 
         memberRepository.save(Member.builder()
-                .email(memberEmail)
+                .email(email)
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("백엔드테스트")
                 .gender("female")
@@ -45,8 +45,8 @@ class MemberRepositoryTest {
                 .privacyTerm(true)
                 .build());
 
-        boolean result = memberRepository.existsByEmail(memberEmail);
-        assertThat(result).isTrue();
+        hasEmail = memberRepository.existsByEmail(email);
+        assertThat(hasEmail).isTrue();
     }
 
     @Test
