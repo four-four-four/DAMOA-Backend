@@ -62,11 +62,11 @@ class MemberServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
-        boolean isNickname = memberService.isNicknameDuplication(nickname);
-        assertThat(isNickname).isFalse();
+        boolean isUsingNickname = memberService.isNicknameDuplication(nickname);
+        assertThat(isUsingNickname).isFalse();
 
         memberService.register(reqMember);
-        boolean result = memberService.isNicknameDuplication(nickname);
-        assertThat(result).isTrue();
+        isUsingNickname = memberService.isNicknameDuplication(nickname);
+        assertThat(isUsingNickname).isTrue();
     }
 }
