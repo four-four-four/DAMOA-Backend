@@ -33,8 +33,6 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        System.out.println("reqRegisterMemberDto = " + reqRegisterMemberDto);
-
         // reqRegisterMemberDto 객체 안에 값이 제대로 들어왔는지 확인
         if (errors.hasErrors()) {
             status = HttpStatus.BAD_REQUEST.value();
@@ -80,8 +78,6 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        System.out.println("reqLoginMemberDto = " + reqLoginMemberDto);
-
         ResMemberDto resMemberDto = memberService.getResMemberDtoByEmail(reqLoginMemberDto.getEmail());
         if (resMemberDto == null) {
             status = HttpStatus.NO_CONTENT.value();
@@ -111,8 +107,6 @@ public class MemberController {
     public BaseResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
-
-        System.out.println("memberEmail = " + memberEmail);
 
         String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
 
