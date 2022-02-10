@@ -33,8 +33,6 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        System.out.println("reqRegisterMemberDto = " + reqRegisterMemberDto);
-
         // reqRegisterMemberDto 객체 안에 값이 제대로 들어왔는지 확인
         if (errors.hasErrors()) {
             status = HttpStatus.BAD_REQUEST.value();
@@ -80,8 +78,6 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        System.out.println("reqLoginMemberDto = " + reqLoginMemberDto);
-
         ResMemberDto resMemberDto = memberService.getResMemberDtoByEmail(reqLoginMemberDto.getEmail());
         if (resMemberDto == null) {
             status = HttpStatus.NO_CONTENT.value();
@@ -112,17 +108,13 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        System.out.println("memberEmail = " + memberEmail);
-
         String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
 
-        if(!memberEmail.matches(emailChk)) {
+        if (!memberEmail.matches(emailChk)) {
             status = HttpStatus.BAD_REQUEST.value();
             responseData.put("message", "이메일을 올바르게 작성해주세요.");
         }
-
-        // 이메일 중복 확인
-        if(memberService.isEmailDuplication(memberEmail)) {
+        else if (memberService.isEmailDuplication(memberEmail)) {
             status = HttpStatus.OK.value();
             responseData.put("message", "사용중인 이메일입니다.");
         }
@@ -141,13 +133,17 @@ public class MemberController {
         Integer status = null;
         Map<String, Object> responseData = new HashMap<>();
 
-        // 닉네임 중복 확인
-        if(memberService.isNicknameDuplication(memberNickname)) {
+        String nicknameChk = "^[0-9|a-z|A-Z|가-힣|\\s]{4,10}$";
+
+        if (!memberNickname.matches(nicknameChk)) {
+            status = HttpStatus.BAD_REQUEST.value();
+            responseData.put("message", "닉네임을 올바르게 작성해주세요.");
+        }
+        else if (memberService.isNicknameDuplication(memberNickname)) {
             status = HttpStatus.OK.value();
             responseData.put("message", "사용중인 닉네임입니다.");
         } else {
             status = HttpStatus.NO_CONTENT.value();
-            responseData.put("message", "사용하실 수 있는 이메일입니다.");
         }
 
         return BaseResponseDto.builder()

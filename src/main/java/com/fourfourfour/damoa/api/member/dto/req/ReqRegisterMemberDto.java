@@ -1,11 +1,12 @@
 package com.fourfourfour.damoa.api.member.dto.req;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"email", "password", "nickname", "gender", "birthDate", "job", "serviceTerm", "privacyTerm", "role"})
 @Getter
 public class ReqRegisterMemberDto {
@@ -13,19 +14,19 @@ public class ReqRegisterMemberDto {
     @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "이메일을 올바르게 작성해주세요.")
     private String email;
 
-    @NotNull(message = "필수 사항입니다.")
+    @Pattern(regexp = "^((?=.*[a-z])(?=.*\\d)((?=.*\\W)|(?=.*[A-Z]))|(?=.*\\W)(?=.*[A-Z])((?=.*\\d)|(?=.*[a-z]))).{8,20}$", message = "비밀번호를 올바르게 작성해주세요.")
     private String password;
 
-    @NotNull(message = "필수 사항입니다.")
-    @Size(min = 4, max = 10, message = "닉네임은 4자 이상 10자 이하로 입력해주세요")
-    @Pattern(regexp = "^[^ㄱ-ㅎ|ㅏ-ㅣ]*$", message = "닉네임에 자음 또는 모음을 사용할 수 없습니다.") // 자음 - 모음이 들어가면 안됨
-    @Pattern(regexp = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\\s]*$", message = "닉네임에 특수문자를 사용할 수 없습니다.") // [] 안에 들어간 문자 빼고는 안됨
+    @Pattern(regexp = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\\s]{4,10}$", message = "닉네임을 올바르게 작성해주세요.")
     private String nickname;
 
+    @Pattern(regexp = "^female|male$")
     private String gender;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
 
+    @Pattern(regexp = "^회사원|학생|자영업자|전문직|기타$")
     private String job;
 
     @AssertTrue(message = "필수 동의 사항입니다.")
@@ -34,6 +35,18 @@ public class ReqRegisterMemberDto {
     @AssertTrue(message = "필수 동의 사항입니다.")
     private boolean privacyTerm;
 
+    @Pattern(regexp = "^ROLE_member$")
     private String role;
 
+    @Builder
+    public ReqRegisterMemberDto(String email, String password, String nickname, String gender, LocalDate birthDate, String job, boolean serviceTerm, boolean privacyTerm) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.gender = gender;
+        this.birthDate = birthDate;
+        this.job = job;
+        this.serviceTerm = serviceTerm;
+        this.privacyTerm = privacyTerm;
+    }
 }
