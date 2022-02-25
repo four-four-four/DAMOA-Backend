@@ -1,6 +1,8 @@
 package com.fourfourfour.damoa.api.member.service;
 
 import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
+import com.fourfourfour.damoa.api.member.repository.MemberRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +22,38 @@ class MemberServiceImplTest {
     MemberService memberService;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Test
-    @DisplayName("이메일 중복 체크")
-    void isEmailDuplication() {
-        String email = "test@test.com";
+    private ReqRegisterMemberDto reqRegisterMemberDto1;
 
-        ReqRegisterMemberDto reqMember = ReqRegisterMemberDto.builder()
-                .email(email)
+    @BeforeEach
+    public void setUp() {
+        memberRepository.deleteAll();
+
+        reqRegisterMemberDto1 = ReqRegisterMemberDto.builder()
+                .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
-                .nickname("백엔드테스트")
+                .nickname("testNickname1")
                 .gender("female")
                 .birthDate(LocalDate.of(1997, 10, 11))
                 .job("대학생")
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
+    }
+
+    @Test
+    @DisplayName("이메일 중복 체크")
+    void isEmailDuplication() {
+        String email = reqRegisterMemberDto1.getEmail();
 
         boolean isUsingEmail = memberService.isEmailDuplication(email);
         assertThat(isUsingEmail).isFalse();
 
-        memberService.register(reqMember);
+        memberService.register(reqRegisterMemberDto1);
         isUsingEmail = memberService.isEmailDuplication(email);
         assertThat(isUsingEmail).isTrue();
     }
@@ -49,23 +61,12 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("닉네임 중복 체크")
     void isNicknameDuplication() {
-        String nickname = "백엔드테스트";
-
-        ReqRegisterMemberDto reqMember = ReqRegisterMemberDto.builder()
-                .email("test@test.com")
-                .password(passwordEncoder.encode("Abcdefg1!"))
-                .nickname(nickname)
-                .gender("female")
-                .birthDate(LocalDate.of(1997, 10, 11))
-                .job("대학생")
-                .serviceTerm(true)
-                .privacyTerm(true)
-                .build();
+        String nickname = reqRegisterMemberDto1.getNickname();
 
         boolean isUsingNickname = memberService.isNicknameDuplication(nickname);
         assertThat(isUsingNickname).isFalse();
 
-        memberService.register(reqMember);
+        memberService.register(reqRegisterMemberDto1);
         isUsingNickname = memberService.isNicknameDuplication(nickname);
         assertThat(isUsingNickname).isTrue();
     }
