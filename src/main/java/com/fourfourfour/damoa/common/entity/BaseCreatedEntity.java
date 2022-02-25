@@ -1,8 +1,8 @@
 package com.fourfourfour.damoa.common.entity;
 
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseTimeEntity {
+public abstract class BaseCreatedEntity {
 
     @CreatedDate
-    @Column(updatable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdTime;
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdDate;
 
-    @Column(columnDefinition = "TIMESTAMP")
-    @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    @CreatedBy
+    @Column(updatable = false, nullable = false)
+    private String createdBy;
 
 }

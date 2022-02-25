@@ -1,8 +1,7 @@
-package com.fourfourfour.damoa.api.notice.entity;
+package com.fourfourfour.damoa.api.event.entity;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.common.entity.BaseLastModifiedEntity;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,19 +11,20 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @ToString(of = {"seq", "title", "content", "views", "isDeleted"})
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "tb_notice")
+@Table(name = "tb_event")
 @Entity
-public class Notice extends BaseLastModifiedEntity {
+public class Event extends BaseLastModifiedEntity {
 
-    @Id @GeneratedValue
-    @Column(name = "notice_seq", columnDefinition = "BIGINT UNSIGNED")
+    @Id
+    @GeneratedValue
+    @Column(name = "event_seq")
     private Long seq;
 
     @Column(nullable = false)
@@ -43,11 +43,10 @@ public class Notice extends BaseLastModifiedEntity {
     @JoinColumn(name = "member_seq", nullable = false)
     private Member writer;
 
-    @OneToMany(mappedBy = "notice", cascade = ALL)
-    private List<NoticeComment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "event", cascade = ALL)
+    private List<EventComment> comments = new ArrayList<>();
 
-    @Builder
-    public Notice(String title, String content, Member writer) {
+    public Event(String title, String content, Member writer) {
         this.title = title;
         this.content = content;
         this.views = 0;

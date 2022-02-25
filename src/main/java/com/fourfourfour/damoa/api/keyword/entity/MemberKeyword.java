@@ -1,6 +1,6 @@
-package com.fourfourfour.damoa.api.member.entity;
+package com.fourfourfour.damoa.api.keyword.entity;
 
-import com.fourfourfour.damoa.api.keyword.entity.Keyword;
+import com.fourfourfour.damoa.api.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
