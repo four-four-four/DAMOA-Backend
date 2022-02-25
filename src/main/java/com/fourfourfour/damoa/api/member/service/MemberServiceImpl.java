@@ -3,15 +3,18 @@ package com.fourfourfour.damoa.api.member.service;
 import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
 import com.fourfourfour.damoa.api.member.dto.res.ResMemberDto;
 import com.fourfourfour.damoa.api.member.entity.Member;
+import com.fourfourfour.damoa.api.member.enums.Gender;
+import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
+import com.fourfourfour.damoa.common.util.LogUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
+@Slf4j
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -20,35 +23,51 @@ public class MemberServiceImpl implements MemberService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public Member register(ReqRegisterMemberDto reqRegisterMemberDto) {
-        LocalDate birthDate = reqRegisterMemberDto.getBirthDate();
-        return memberRepository.save(Member.builder()
+        log.info(LogUtil.getClassAndMethodName());
+
+        String gender = reqRegisterMemberDto.getGender();
+
+        Member newMember = Member.builder()
                 .email(reqRegisterMemberDto.getEmail())
                 .password(passwordEncoder.encode(reqRegisterMemberDto.getPassword()))
                 .nickname(reqRegisterMemberDto.getNickname())
-                .gender(reqRegisterMemberDto.getGender())
-                .birthDate(birthDate == null ? null : LocalDateTime.of(birthDate, LocalTime.now()))
+                .gender(gender == null ? null : Gender.valueOf(gender.toUpperCase()))
+                .birthDate(reqRegisterMemberDto.getBirthDate())
                 .job(reqRegisterMemberDto.getJob())
                 .serviceTerm(reqRegisterMemberDto.isServiceTerm())
                 .privacyTerm(reqRegisterMemberDto.isPrivacyTerm())
-                .role("ROLE_member")
-                .build());
+                .role(Role.MEMBER)
+                .build();
+
+        return memberRepository.save(newMember);
     }
 
     @Override
     public boolean isEmailDuplication(String email) {
+        log.info(LogUtil.getClassAndMethodName());
+
         return memberRepository.existsByEmail(email);
     }
 
     @Override
     public boolean isNicknameDuplication(String nickname) {
+        log.info(LogUtil.getClassAndMethodName());
+
         return memberRepository.existsByNickname(nickname);
     }
 
     @Override
     public ResMemberDto getResMemberDtoByEmail(String email) {
+        log.info(LogUtil.getClassAndMethodName());
+
         return memberRepository.findResMemberDtoByEmail(email);
     }
 
+    @Override
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 }

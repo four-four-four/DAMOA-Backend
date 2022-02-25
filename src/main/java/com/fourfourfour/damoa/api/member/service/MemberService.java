@@ -6,12 +6,14 @@ import com.fourfourfour.damoa.api.member.entity.Member;
 
 public interface MemberService {
 
-    Member register(ReqRegisterMemberDto memberDto);
+    Member register(ReqRegisterMemberDto reqRegisterMemberDto);
 
     boolean isEmailDuplication(String email);
 
     boolean isNicknameDuplication(String nickname);
 
     ResMemberDto getResMemberDtoByEmail(String email);
+
+    Member findMemberByEmail(String email);
 
 }
