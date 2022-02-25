@@ -1,6 +1,7 @@
-package com.fourfourfour.damoa.api.keyword.entity;
+package com.fourfourfour.damoa.api.moa.entity;
 
-import com.fourfourfour.damoa.common.entity.BaseDeletedEntity;
+import com.fourfourfour.damoa.api.keyword.entity.Keyword;
+import com.fourfourfour.damoa.common.entity.BaseCreatedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "tb_collected_data")
 @Entity
-public class CollectedData extends BaseDeletedEntity {
+public class CollectedData extends BaseCreatedEntity {
 
     @Id @GeneratedValue
     @Column(name = "collected_data_id")
@@ -36,6 +37,9 @@ public class CollectedData extends BaseDeletedEntity {
     private String url;
 
     private String imgUrl;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
 
     @ManyToOne(fetch = LAZY)
     private Keyword keyword;
