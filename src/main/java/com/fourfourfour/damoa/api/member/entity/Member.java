@@ -6,6 +6,7 @@ import com.fourfourfour.damoa.api.keyword.entity.KeywordComment;
 import com.fourfourfour.damoa.api.keyword.entity.MemberKeyword;
 import com.fourfourfour.damoa.api.member.enums.Gender;
 import com.fourfourfour.damoa.api.member.enums.Role;
+import com.fourfourfour.damoa.api.moa.entity.MoaLike;
 import com.fourfourfour.damoa.api.notice.entity.Notice;
 import com.fourfourfour.damoa.api.notice.entity.NoticeComment;
 import com.fourfourfour.damoa.common.entity.BaseLastModifiedEntity;
@@ -85,6 +86,9 @@ public class Member extends BaseLastModifiedEntity {
 
     @OneToMany(mappedBy = "writer", cascade = ALL)
     private List<EventComment> eventComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<MoaLike> moaLikes = new ArrayList<>();
 
     @Builder
     public Member(String email, String password, String nickname, Gender gender, LocalDate birthDate, String job, boolean serviceTerm, boolean privacyTerm, Role role) {

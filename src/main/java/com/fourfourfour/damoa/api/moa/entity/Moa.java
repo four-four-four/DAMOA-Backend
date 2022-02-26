@@ -9,6 +9,10 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -44,6 +48,9 @@ public class Moa extends BaseCreatedEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "keyword_seq", nullable = false)
     private Keyword keyword;
+
+    @OneToMany(mappedBy = "moa", cascade = ALL)
+    private List<MoaLike> moaLikes = new ArrayList<>();
 
     @Builder
     public Moa(String title, String content, String source, String url, String imgUrl, Keyword keyword) {
