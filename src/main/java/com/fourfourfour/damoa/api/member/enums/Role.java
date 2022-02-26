@@ -7,11 +7,6 @@ public enum Role implements GrantedAuthority {
     MEMBER(ROLES.MEMBER, "회원"),
     ADMIN(ROLES.ADMIN, "관리자");
 
-    public static class ROLES {
-        public static final String MEMBER = "ROLE_MEMBER";
-        public static final String ADMIN = "ROLE_ADMIN";
-    }
-
     private final String authority;
     private final String description;
 
@@ -27,5 +22,10 @@ public enum Role implements GrantedAuthority {
 
     public String getDescription() {
         return description;
+    }
+
+    public static class ROLES {
+        public static final String MEMBER = "ROLE_MEMBER";
+        public static final String ADMIN = "ROLE_ADMIN";
     }
 }
