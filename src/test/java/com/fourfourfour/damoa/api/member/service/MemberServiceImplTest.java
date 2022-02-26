@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
@@ -19,10 +20,10 @@ import static org.assertj.core.api.Assertions.*;
 class MemberServiceImplTest {
 
     @Autowired
-    MemberService memberService;
+    private MemberService memberService;
 
     @Autowired
-    MemberRepository memberRepository;
+    private EntityManager em;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -31,7 +32,7 @@ class MemberServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        memberRepository.deleteAll();
+        memberService.deleteAll();
 
         reqRegisterMemberDto1 = ReqRegisterMemberDto.builder()
                 .email("test1@damoa.com")
@@ -50,10 +51,14 @@ class MemberServiceImplTest {
     void isEmailDuplication() {
         String email = reqRegisterMemberDto1.getEmail();
 
+        // 이메일 중복 체크
         boolean isUsingEmail = memberService.isEmailDuplication(email);
         assertThat(isUsingEmail).isFalse();
 
+        // 회원가입
         memberService.register(reqRegisterMemberDto1);
+
+        // 이메일 중복 체크
         isUsingEmail = memberService.isEmailDuplication(email);
         assertThat(isUsingEmail).isTrue();
     }
@@ -63,10 +68,14 @@ class MemberServiceImplTest {
     void isNicknameDuplication() {
         String nickname = reqRegisterMemberDto1.getNickname();
 
+        // 닉네임 중복 체크
         boolean isUsingNickname = memberService.isNicknameDuplication(nickname);
         assertThat(isUsingNickname).isFalse();
 
+        // 회원가입
         memberService.register(reqRegisterMemberDto1);
+
+        // 닉네임 중복 체크
         isUsingNickname = memberService.isNicknameDuplication(nickname);
         assertThat(isUsingNickname).isTrue();
     }
