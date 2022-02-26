@@ -1,16 +1,18 @@
 package com.fourfourfour.damoa.common.dto.response;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BaseResponseDto {
 
-    private int status;
+    private Integer status;
 
     private Object data;
 
+    @Builder
+    public BaseResponseDto(Integer status, Object data) {
+        this.status = status;
+        this.data = data;
+    }
 }

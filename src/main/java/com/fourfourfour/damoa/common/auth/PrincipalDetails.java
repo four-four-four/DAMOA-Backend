@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.config.auth;
+package com.fourfourfour.damoa.common.auth;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
 import lombok.Data;
@@ -7,11 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 public class PrincipalDetails implements UserDetails {
 
     private Member member;
+
+    List<GrantedAuthority> roles = new ArrayList<>();
 
     public PrincipalDetails(Member member) {
         this.member = member;
@@ -19,10 +22,11 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        System.out.println("PrincipalDetails collection role : " + member.getRole());
-        collection.add(() -> member.getRole());
-        return collection;
+        return this.roles;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> roles) {
+        this.roles = roles;
     }
 
     @Override

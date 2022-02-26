@@ -21,6 +21,4 @@ public class DamoaApplication {
 	public AuditorAware<String> auditorProvider() {
 		return () -> Optional.of(UUID.randomUUID().toString());
 	}
-
-
 }

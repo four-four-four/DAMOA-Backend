@@ -6,8 +6,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(of = {"email", "password", "nickname", "gender", "birthDate", "job", "serviceTerm", "privacyTerm", "role"})
+@NoArgsConstructor
+@ToString(of = {"email", "password", "nickname", "gender", "birthDate", "job", "serviceTerm", "privacyTerm"})
 @Getter
 public class ReqRegisterMemberDto {
 
@@ -34,9 +34,6 @@ public class ReqRegisterMemberDto {
 
     @AssertTrue(message = "필수 동의 사항입니다.")
     private boolean privacyTerm;
-
-    @Pattern(regexp = "^ROLE_member$")
-    private String role;
 
     @Builder
     public ReqRegisterMemberDto(String email, String password, String nickname, String gender, LocalDate birthDate, String job, boolean serviceTerm, boolean privacyTerm) {

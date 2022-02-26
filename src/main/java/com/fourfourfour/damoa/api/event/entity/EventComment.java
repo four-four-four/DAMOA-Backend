@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.api.notice.entity;
+package com.fourfourfour.damoa.api.event.entity;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.common.entity.BaseLastModifiedEntity;
@@ -9,49 +9,39 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
-@ToString(of = {"seq", "title", "content", "views", "isDeleted"})
+@ToString(of = {"seq", "content", "isDeleted"})
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "tb_notice")
+@Table(name = "tb_event_comment")
 @Entity
-public class Notice extends BaseLastModifiedEntity {
+public class EventComment extends BaseLastModifiedEntity {
 
     @Id @GeneratedValue
-    @Column(name = "notice_seq", columnDefinition = "BIGINT UNSIGNED")
+    @Column(name = "comment_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
-
-    @Column(nullable = false)
-    private String title;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED")
-    private Integer views;
 
     @Column(nullable = false, columnDefinition = "TINYINT")
     private boolean isDeleted;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "event_seq", nullable = false)
+    private Event event;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_seq", nullable = false)
     private Member writer;
 
-    @OneToMany(mappedBy = "notice", cascade = ALL)
-    private List<NoticeComment> comments = new ArrayList<>();
-
     @Builder
-    public Notice(String title, String content, Member writer) {
-        this.title = title;
+    public EventComment(String content, Event event, Member writer) {
         this.content = content;
-        this.views = 0;
         this.isDeleted = false;
+        this.event = event;
         this.writer = writer;
     }
 }
