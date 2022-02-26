@@ -70,4 +70,10 @@ public class MemberServiceImpl implements MemberService {
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        memberRepository.deleteAll();
+    }
 }
