@@ -107,7 +107,6 @@ public class MemberController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
     @GetMapping("/email/{memberEmail}/exists")
     public BaseResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
         log.info(LogUtil.getClassAndMethodName());
