@@ -1,7 +1,6 @@
 package com.fourfourfour.damoa.api.member.service;
 
 import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
-import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
