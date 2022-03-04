@@ -27,7 +27,7 @@ echo "#################################"
 echo "# 스프링 부트 애플리케이션 실행 #"
 echo "#################################"
 JAR_NAME=$(ls -tr $BE_DIR/*.jar | tail -n 1)
-echo "> JAR name : $JAR_NAME"
+echo "# JAR name : $JAR_NAME"
 
 nohup java -jar $JAR_NAME > $BE_DIR./nohup.out 2>&1 &
 echo "######################################"
