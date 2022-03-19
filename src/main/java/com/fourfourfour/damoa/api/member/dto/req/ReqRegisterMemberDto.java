@@ -11,13 +11,13 @@ import java.time.LocalDate;
 @Getter
 public class ReqRegisterMemberDto {
 
-    @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "이메일을 올바르게 작성해주세요.")
+    @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "{pattern.member.email}")
     private String email;
 
-    @Pattern(regexp = "^((?=.*[a-z])(?=.*\\d)((?=.*\\W)|(?=.*[A-Z]))|(?=.*\\W)(?=.*[A-Z])((?=.*\\d)|(?=.*[a-z]))).{8,20}$", message = "비밀번호를 올바르게 작성해주세요.")
+    @Pattern(regexp = "^((?=.*[a-z])(?=.*\\d)((?=.*\\W)|(?=.*[A-Z]))|(?=.*\\W)(?=.*[A-Z])((?=.*\\d)|(?=.*[a-z]))).{8,20}$", message = "{pattern.member.password}")
     private String password;
 
-    @Pattern(regexp = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\\s]{4,10}$", message = "닉네임을 올바르게 작성해주세요.")
+    @Pattern(regexp = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\\s]{4,10}$", message = "{pattern.member.nickname}")
     private String nickname;
 
     @Pattern(regexp = "^female|male$")
@@ -29,10 +29,10 @@ public class ReqRegisterMemberDto {
     @Pattern(regexp = "^회사원|학생|자영업자|전문직|기타$")
     private String job;
 
-    @AssertTrue(message = "필수 동의 사항입니다.")
+    @AssertTrue(message = "{pattern.member.term}")
     private boolean serviceTerm;
 
-    @AssertTrue(message = "필수 동의 사항입니다.")
+    @AssertTrue(message = "{pattern.member.term}")
     private boolean privacyTerm;
 
     @Builder
