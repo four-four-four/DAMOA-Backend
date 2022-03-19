@@ -6,13 +6,23 @@ import lombok.Getter;
 @Getter
 public class BaseResponseDto {
 
-    private Integer status;
+    private final String message;
 
-    private Object data;
+    private final Object data;
 
     @Builder
-    public BaseResponseDto(Integer status, Object data) {
-        this.status = status;
+    public BaseResponseDto(String message, Object data) {
+        this.message = message;
         this.data = data;
+    }
+
+    @Builder
+    public BaseResponseDto(String message) {
+        this(message, null);
+    }
+
+    @Builder
+    public BaseResponseDto(Object data) {
+        this(null, data);
     }
 }
