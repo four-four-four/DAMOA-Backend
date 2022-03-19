@@ -2,7 +2,7 @@ package com.fourfourfour.damoa.common.auth;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
-import com.fourfourfour.damoa.common.util.LogUtil;
+import com.fourfourfour.damoa.common.message.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,9 +19,9 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        log.info(LogUtil.getClassAndMethodName());
-        log.debug("email = {}", email);
-        Member member = memberRepository.findByEmail(email);
+        log.info("Call PrincipalDetailsService.loadUserByUsername(), email={}", email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
 
         return member == null ? null : new PrincipalDetails(member);
     }

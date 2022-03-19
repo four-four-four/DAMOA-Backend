@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.config;
+package com.fourfourfour.damoa.config.security;
 
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import com.fourfourfour.damoa.common.auth.JwtAuthenticationFilter;
@@ -18,15 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-/**
- * spring security filter(SecurityConfig 클래스)가 스프링 필터체인에 등록이 된다.
- */
 @EnableWebSecurity
-/**
- * secured 애노테이션 활성화, preAuthorize 애노테이션 활성화
- */
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
@@ -56,30 +50,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                /**
-                 * csrf 비활성화
-                 * https://velog.io/@woohobi/Spring-security-csrf%EB%9E%80
-                 */
                 .csrf().disable()
-
-                /**
-                 * 세션 비활성화
-                 */
+                .httpBasic().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
-
-                /**
-                 * 토큰 방식을 사용하므로
-                 * 기존의 HTTP 로그인 방식(ID, PW를 보내는 방식) 비활성화
-                 */
-                .httpBasic().disable()
-
                 .addFilter(corsFilter)
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberRepository))
-
                 .authorizeRequests()
                 .anyRequest().permitAll();
         ;
     }
 }
+

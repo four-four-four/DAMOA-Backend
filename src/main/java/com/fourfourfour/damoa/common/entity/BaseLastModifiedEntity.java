@@ -22,5 +22,4 @@ public abstract class BaseLastModifiedEntity extends BaseCreatedEntity {
     @LastModifiedBy
     @Column(nullable = false)
     private String lastModifiedBy;
-
 }

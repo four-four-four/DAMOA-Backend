@@ -4,6 +4,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
+import com.fourfourfour.damoa.common.message.ErrorMessage;
 import com.fourfourfour.damoa.common.util.JwtTokenUtil;
 import com.fourfourfour.damoa.common.util.ResponseBodyWriteUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,7 +67,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String email = decodedJWT.getSubject();
 
             if (email != null) {
-                Member member = memberRepository.findByEmail(email);
+                Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
 
                 if(member != null) {
                     PrincipalDetails customUserDetails = new PrincipalDetails(member);

@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ResponseBodyWriteUtil {
 
     public static void sendError(HttpServletRequest request, HttpServletResponse response, Exception ex, HttpStatus httpStatus) throws IOException {
-        log.info(LogUtil.getClassAndMethodName());
+        log.info("Call ResponseBodyWriteUtil.sendError()");
 
         response.setStatus(httpStatus.value());
         response.setContentType(APPLICATION_JSON_VALUE);
@@ -38,8 +38,6 @@ public class ResponseBodyWriteUtil {
     }
 
     public static void sendError(HttpServletRequest request, HttpServletResponse response, Exception ex) throws IOException {
-        log.info(LogUtil.getClassAndMethodName());
-
         sendError(request, response, ex, HttpStatus.UNAUTHORIZED);
     }
 }
