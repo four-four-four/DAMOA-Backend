@@ -6,7 +6,7 @@ import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.api.member.enums.Gender;
 import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
-import com.fourfourfour.damoa.common.util.LogUtil;
+import com.fourfourfour.damoa.common.message.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +26,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Member register(ReqRegisterMemberDto reqRegisterMemberDto) {
-        log.info(LogUtil.getClassAndMethodName());
-
         String gender = reqRegisterMemberDto.getGender();
 
         Member newMember = Member.builder()
@@ -47,28 +45,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public boolean isEmailDuplication(String email) {
-        log.info(LogUtil.getClassAndMethodName());
-
         return memberRepository.existsByEmail(email);
     }
 
     @Override
     public boolean isNicknameDuplication(String nickname) {
-        log.info(LogUtil.getClassAndMethodName());
-
         return memberRepository.existsByNickname(nickname);
     }
 
     @Override
     public ResMemberDto getResMemberDtoByEmail(String email) {
-        log.info(LogUtil.getClassAndMethodName());
-
-        return memberRepository.findResMemberDtoByEmail(email);
+        return memberRepository.findResMemberDtoByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
     }
 
     @Override
     public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+        return memberRepository.findByEmail(email)
+                .orElse(null);
     }
 
     @Transactional

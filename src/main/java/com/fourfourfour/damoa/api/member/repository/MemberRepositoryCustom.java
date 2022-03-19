@@ -2,8 +2,9 @@ package com.fourfourfour.damoa.api.member.repository;
 
 import com.fourfourfour.damoa.api.member.dto.res.ResMemberDto;
 
+import java.util.Optional;
+
 public interface MemberRepositoryCustom {
 
-    ResMemberDto findResMemberDtoByEmail(String email);
-
+    Optional<ResMemberDto> findResMemberDtoByEmail(String email);
 }
