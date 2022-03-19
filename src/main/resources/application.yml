@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    include: jpa,database,jwt
+
+  devtools:
+    restart:
+      enabled: true
+
+  messages:
+    basename: messages,errors
+
+server:
+  port: 8080
+
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
