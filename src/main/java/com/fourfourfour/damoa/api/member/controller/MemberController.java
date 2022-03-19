@@ -2,19 +2,20 @@ package com.fourfourfour.damoa.api.member.controller;
 
 import com.fourfourfour.damoa.api.member.dto.req.ReqLoginMemberDto;
 import com.fourfourfour.damoa.api.member.dto.res.ResMemberDto;
+import com.fourfourfour.damoa.common.message.ErrorMessage;
+import com.fourfourfour.damoa.common.message.Message;
 import com.fourfourfour.damoa.common.util.JwtTokenUtil;
-import com.fourfourfour.damoa.common.util.LogUtil;
 import com.fourfourfour.damoa.common.dto.response.BaseResponseDto;
 import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
 import com.fourfourfour.damoa.api.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -29,132 +30,80 @@ public class MemberController {
 
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping("/email-register")
-    public BaseResponseDto emailRegister(final @Valid @RequestBody ReqRegisterMemberDto reqRegisterMemberDto, Errors errors) {
-        log.info(LogUtil.getClassAndMethodName());
-
-        Integer status = null;
-        Map<String, Object> responseData = new HashMap<>();
-
-        // reqRegisterMemberDto 객체 안에 값이 제대로 들어왔는지 확인
-        if (errors.hasErrors()) {
-            status = BAD_REQUEST.value();
-            if (errors.hasFieldErrors()) {
-                responseData.put("field", errors.getFieldError().getField());
-                responseData.put("message", errors.getFieldError().getDefaultMessage());
-            } else if (errors.hasGlobalErrors()) {
-                responseData.put("message", "global error");
-            }
+    @ResponseStatus(CREATED)
+    @PostMapping
+    public BaseResponseDto emailRegister(final @Validated @RequestBody ReqRegisterMemberDto reqRegisterMemberDto) {
+        if (memberService.isEmailDuplication(reqRegisterMemberDto.getEmail())) {
+            throw new IllegalArgumentException(Message.DUPLICATE_MEMBER_EMAIL);
+        } else if (memberService.isNicknameDuplication(reqRegisterMemberDto.getNickname())) {
+            throw new IllegalArgumentException(Message.DUPLICATE_MEMBER_NICKNAME);
         }
 
-        // 이메일 중복 확인
-        else if(memberService.isEmailDuplication(reqRegisterMemberDto.getEmail())) {
-            status = CONFLICT.value();
-            responseData.put("message", "사용중인 이메일입니다.");
-        }
-
-        // 닉네임 중복 확인
-        else if(memberService.isNicknameDuplication(reqRegisterMemberDto.getNickname())) {
-            status = CONFLICT.value();
-            responseData.put("message", "사용중인 닉네임입니다.");
-        }
-
-        else {
-            try {
-                memberService.register(reqRegisterMemberDto);
-                status = CREATED.value();
-                responseData.put("message", "회원가입 되었습니다.");
-            } catch (Exception e) {
-                log.error("Server Error");
-                e.printStackTrace();
-
-                status = INTERNAL_SERVER_ERROR.value();
-                responseData.put("message", "요청을 수행할 수 없습니다.");
-            }
-        }
+        memberService.register(reqRegisterMemberDto);
 
         return BaseResponseDto.builder()
-                .status(status)
-                .data(responseData)
+                .data(Message.REGISTER_MEMBER)
+                .data(null)
                 .build();
     }
 
+    @ResponseStatus(OK)
     @PostMapping("/login")
     protected BaseResponseDto login(@RequestBody ReqLoginMemberDto reqLoginMemberDto) {
-        log.info(LogUtil.getClassAndMethodName());
-
-        Integer status = null;
-        Map<String, Object> responseData = new HashMap<>();
-
         ResMemberDto resMemberDto = memberService.getResMemberDtoByEmail(reqLoginMemberDto.getEmail());
         if (resMemberDto == null) {
-            status = NO_CONTENT.value();
-            responseData.put("message", "존재하지 않는 회원입니다.");
+            throw new IllegalArgumentException(ErrorMessage.NULL_MEMBER);
         } else if (!passwordEncoder.matches(reqLoginMemberDto.getPassword(), resMemberDto.getPassword())) {
-            status = UNAUTHORIZED.value();
-            responseData.put("message", "아이디 또는 비밀번호가 틀렸습니다.");
-        } else {
-            String jwtToken = JwtTokenUtil.getToken(resMemberDto.getEmail());
-
-            status = OK.value();
-            responseData.put("jwtToken", jwtToken);
-            responseData.put("memberInfo", resMemberDto);
+            throw new IllegalArgumentException(ErrorMessage.AUTHENTICATION_MEMBER);
         }
 
+        Map<String, Object> data = new HashMap<>();
+        String jwtToken = JwtTokenUtil.getToken(resMemberDto.getEmail());
+        data.put("jwtToken", jwtToken);
+        data.put("memberInfo", resMemberDto);
+
         return BaseResponseDto.builder()
-                .status(status)
-                .data(responseData)
+                .message(Message.LOGIN)
+                .data(data)
                 .build();
     }
 
-    @GetMapping("/email/{memberEmail}/exists")
-    public BaseResponseDto checkEmailDuplicate(@PathVariable String memberEmail) {
-        log.info(LogUtil.getClassAndMethodName());
-
-        Integer status = null;
-        Map<String, Object> responseData = new HashMap<>();
-
+    @GetMapping("/email-duplicate-check/{email}")
+    public ResponseEntity<BaseResponseDto> checkEmailDuplicate(@PathVariable String email) {
         String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
-
-        if (!memberEmail.matches(emailChk)) {
-            status = BAD_REQUEST.value();
-            responseData.put("message", "이메일을 올바르게 작성해주세요.");
-        } else if (memberService.isEmailDuplication(memberEmail)) {
-            status = OK.value();
-            responseData.put("message", "사용중인 이메일입니다.");
-        } else {
-            status = NO_CONTENT.value();
+        if (!email.matches(emailChk)) {
+            throw new IllegalArgumentException(ErrorMessage.PATTERN_MEMBER_EMAIL);
         }
 
-        return BaseResponseDto.builder()
-                .status(status)
-                .data(responseData)
-                .build();
+        HttpStatus status = null;
+        if (memberService.isEmailDuplication(email)) {
+            status = OK;
+        } else {
+            status = NO_CONTENT;
+        }
+
+        return new ResponseEntity<>(BaseResponseDto.builder()
+                .message(status == OK ? Message.DUPLICATE_MEMBER_EMAIL : Message.USABLE_MEMBER_EMAIL)
+                .build(), status);
     }
 
-    @GetMapping("/nickname/{memberNickname}/exists")
-    public BaseResponseDto checkNicknameDuplicate(@PathVariable String memberNickname) {
-        log.info(LogUtil.getClassAndMethodName());
-
-        Integer status = null;
-        Map<String, Object> responseData = new HashMap<>();
-
+    @GetMapping("/nickname-duplicate-check/{nickname}")
+    public ResponseEntity<BaseResponseDto> checkNicknameDuplicate(@PathVariable String nickname) {
         String nicknameChk = "^[0-9|a-z|A-Z|가-힣|\\s]{4,10}$";
-
-        if (!memberNickname.matches(nicknameChk)) {
-            status = BAD_REQUEST.value();
-            responseData.put("message", "닉네임을 올바르게 작성해주세요.");
-        } else if (memberService.isNicknameDuplication(memberNickname)) {
-            status = OK.value();
-            responseData.put("message", "사용중인 닉네임입니다.");
-        } else {
-            status = NO_CONTENT.value();
+        if (!nickname.matches(nicknameChk)) {
+            throw new IllegalArgumentException(ErrorMessage.PATTERN_MEMBER_NICKNAME);
         }
 
-        return BaseResponseDto.builder()
-                .status(status)
-                .data(responseData)
-                .build();
+        HttpStatus status = null;
+        if (memberService.isNicknameDuplication(nickname)) {
+            status = OK;
+        } else {
+            status = NO_CONTENT;
+        }
+
+        return new ResponseEntity<>(BaseResponseDto.builder()
+                .message(status == OK ? Message.DUPLICATE_MEMBER_NICKNAME : Message.USABLE_MEMBER_NICKNAME)
+                .build(), status);
     }
 
 }
