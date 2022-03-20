@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.config;
+package com.fourfourfour.damoa.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,5 +27,4 @@ public class CorsConfig {
         source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);
     }
-
 }

@@ -1,4 +1,6 @@
-*.yml
+application-database.yml
+application-jpa.yml
+application-jwt.yml
 
 HELP.md
 .gradle

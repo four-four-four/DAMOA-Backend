@@ -31,7 +31,7 @@ public class JwtTokenUtil {
     public static final String ISSUER = "damoa.com";
 
     @Autowired
-    public JwtTokenUtil(@Value("${jwt.key}") String secretKey, @Value("${jwt.expirationTime}") Integer expirationTime) {
+    public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
         this.secretKey = secretKey;
         this.expirationTime = expirationTime;
     }
