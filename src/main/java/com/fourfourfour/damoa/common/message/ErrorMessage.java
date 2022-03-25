@@ -23,6 +23,10 @@ public class ErrorMessage {
 
     public static String NULL_MEMBER_EMAIL;
 
+    public static String BLANK_NOTICE_TITLE;
+
+    public static String BLANK_NOTICE_CONTENT;
+
     public static String ERROR;
 
     @Autowired
@@ -35,6 +39,8 @@ public class ErrorMessage {
         PATTERN_MEMBER_TERM = messageSource.getMessage("pattern.member.term", null, null);
         NULL_MEMBER = messageSource.getMessage("null.member", null, null);
         NULL_MEMBER_EMAIL = messageSource.getMessage("null.member.email", null, null);
+        BLANK_NOTICE_TITLE = messageSource.getMessage("blank.notice.title", null, null);
+        BLANK_NOTICE_CONTENT = messageSource.getMessage("blank.notice.content", null, null);
         ERROR = messageSource.getMessage("error", null, null);
     }
 }
