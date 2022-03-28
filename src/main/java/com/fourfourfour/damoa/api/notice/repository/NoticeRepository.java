@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
-    @Query("SELECT n FROM Notice n WHERE n.seq = :seq")
+    @Query("SELECT n FROM Notice n WHERE n.seq = :seq AND n.isDeleted = FALSE")
     Notice findBySeq(@Param("seq") Long seq);
 }
