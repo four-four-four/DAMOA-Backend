@@ -70,13 +70,15 @@ public class NoticeRepositoryTest {
                 .build();
 
         noticeRepository.save(notice);
+        em.flush();
+        em.clear();
 
         Notice savedNotice = noticeRepository.findBySeq(notice.getSeq());
         assertThat(notice.getSeq()).isEqualTo(savedNotice.getSeq());
         assertThat(notice.getTitle()).isEqualTo(savedNotice.getTitle());
         assertThat(notice.getContent()).isEqualTo(savedNotice.getContent());
         assertThat(notice.getViews()).isEqualTo(savedNotice.getViews());
-        assertThat(notice.getWriter()).isEqualTo(savedNotice.getWriter());
+        assertThat(notice.getWriter().getSeq()).isEqualTo(savedNotice.getWriter().getSeq());
         assertThat(notice.isDeleted()).isEqualTo(savedNotice.isDeleted());
     }
 }
