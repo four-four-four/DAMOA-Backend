@@ -20,6 +20,8 @@ public class Message {
 
     public static String USABLE_MEMBER_NICKNAME;
 
+    public static String REGISTER_NOTICE;
+
     @Autowired
     public Message(MessageSource messageSource) {
         REGISTER_MEMBER = messageSource.getMessage("register.member", null, null);
@@ -28,5 +30,6 @@ public class Message {
         DUPLICATE_MEMBER_NICKNAME = messageSource.getMessage("duplicate.member.nickname", null, null);
         USABLE_MEMBER_EMAIL = messageSource.getMessage("usable.member.email", null, null);
         USABLE_MEMBER_NICKNAME = messageSource.getMessage("usable.member.nickname", null, null);
+        REGISTER_NOTICE = messageSource.getMessage("register.notice", null, null);
     }
 }
