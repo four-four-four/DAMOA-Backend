@@ -4,25 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class BaseResponseDto {
+public class BaseResponseDto<T> {
 
     private final String message;
 
-    private final Object data;
+    private final T data;
 
     @Builder
-    public BaseResponseDto(String message, Object data) {
+    public BaseResponseDto(String message, T data) {
         this.message = message;
         this.data = data;
-    }
-
-    @Builder
-    public BaseResponseDto(String message) {
-        this(message, null);
-    }
-
-    @Builder
-    public BaseResponseDto(Object data) {
-        this(null, data);
     }
 }
