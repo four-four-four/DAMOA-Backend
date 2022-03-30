@@ -1,4 +1,4 @@
-package com.fourfourfour.damoa.common.message;
+package com.fourfourfour.damoa.common.constant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -27,6 +27,8 @@ public class ErrorMessage {
 
     public static String BLANK_NOTICE_CONTENT;
 
+    public static String FORBIDDEN;
+
     public static String ERROR;
 
     @Autowired
@@ -41,6 +43,7 @@ public class ErrorMessage {
         NULL_MEMBER_EMAIL = messageSource.getMessage("null.member.email", null, null);
         BLANK_NOTICE_TITLE = messageSource.getMessage("blank.notice.title", null, null);
         BLANK_NOTICE_CONTENT = messageSource.getMessage("blank.notice.content", null, null);
+        FORBIDDEN = messageSource.getMessage("forbidden", null, null);
         ERROR = messageSource.getMessage("error", null, null);
     }
 }
