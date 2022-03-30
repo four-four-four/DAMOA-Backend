@@ -1,12 +1,10 @@
 package com.fourfourfour.damoa.api.member.service;
 
-import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
-import com.fourfourfour.damoa.api.member.dto.res.ResMemberDto;
+import com.fourfourfour.damoa.api.member.service.dto.MemberDto;
 import com.fourfourfour.damoa.api.member.entity.Member;
-import com.fourfourfour.damoa.api.member.enums.Gender;
-import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
-import com.fourfourfour.damoa.common.message.ErrorMessage;
+import com.fourfourfour.damoa.api.member.service.dto.MemberResponseDto;
+import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,19 +23,17 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public Member register(ReqRegisterMemberDto reqRegisterMemberDto) {
-        String gender = reqRegisterMemberDto.getGender();
-
+    public Member register(MemberDto.RegisterDto registerDto) {
         Member newMember = Member.builder()
-                .email(reqRegisterMemberDto.getEmail())
-                .password(passwordEncoder.encode(reqRegisterMemberDto.getPassword()))
-                .nickname(reqRegisterMemberDto.getNickname())
-                .gender(gender == null ? null : Gender.valueOf(gender.toUpperCase()))
-                .birthDate(reqRegisterMemberDto.getBirthDate())
-                .job(reqRegisterMemberDto.getJob())
-                .serviceTerm(reqRegisterMemberDto.isServiceTerm())
-                .privacyTerm(reqRegisterMemberDto.isPrivacyTerm())
-                .role(Role.MEMBER)
+                .email(registerDto.getEmail())
+                .password(passwordEncoder.encode(registerDto.getPassword()))
+                .nickname(registerDto.getNickname())
+                .gender(registerDto.getGender())
+                .birthDate(registerDto.getBirthDate())
+                .job(registerDto.getJob())
+                .serviceTerm(registerDto.isServiceTerm())
+                .privacyTerm(registerDto.isPrivacyTerm())
+                .role(Member.Role.MEMBER)
                 .build();
 
         return memberRepository.save(newMember);
@@ -54,15 +50,24 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ResMemberDto getResMemberDtoByEmail(String email) {
-        return memberRepository.findResMemberDtoByEmail(email)
+    public boolean login(String email, String password) {
+        Member findMember = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
+
+        return passwordEncoder.matches(password, findMember.getPassword());
     }
 
     @Override
-    public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElse(null);
+    public MemberResponseDto.LoginInfo getLoginDtoByEmail(String email) {
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
+
+        return MemberResponseDto.LoginInfo.builder()
+                .seq(findMember.getSeq())
+                .email(findMember.getEmail())
+                .nickname(findMember.getNickname())
+                .role(findMember.getRole())
+                .build();
     }
 
     @Transactional
