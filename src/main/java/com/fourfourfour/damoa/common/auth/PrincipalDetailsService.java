@@ -1,7 +1,7 @@
 package com.fourfourfour.damoa.common.auth;
 
-import com.fourfourfour.damoa.api.member.entity.Member;
-import com.fourfourfour.damoa.api.member.repository.MemberRepository;
+import com.fourfourfour.damoa.domain.member.entity.Member;
+import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

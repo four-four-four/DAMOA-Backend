@@ -1,6 +1,6 @@
 package com.fourfourfour.damoa.config.security;
 
-import com.fourfourfour.damoa.api.member.repository.MemberRepository;
+import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import com.fourfourfour.damoa.common.auth.JwtAuthenticationFilter;
 import com.fourfourfour.damoa.common.auth.PrincipalDetailsService;
 import lombok.RequiredArgsConstructor;
