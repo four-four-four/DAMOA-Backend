@@ -4,14 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class BaseResponseDto<T> {
+public class ErrorResponseDto<T> {
 
     private final String message;
 
     private final T data;
 
     @Builder
-    public BaseResponseDto(String message, T data) {
+    public ErrorResponseDto(String message, T data) {
         this.message = message;
         this.data = data;
     }

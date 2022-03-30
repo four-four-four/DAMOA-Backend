@@ -1,6 +1,6 @@
 package com.fourfourfour.damoa.common.auth;
 
-import com.fourfourfour.damoa.api.member.entity.Member;
+import com.fourfourfour.damoa.domain.member.entity.Member;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
