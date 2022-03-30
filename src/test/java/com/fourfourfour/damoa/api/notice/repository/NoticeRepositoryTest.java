@@ -1,8 +1,6 @@
 package com.fourfourfour.damoa.api.notice.repository;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
-import com.fourfourfour.damoa.api.member.enums.Gender;
-import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import com.fourfourfour.damoa.api.notice.entity.Notice;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +32,7 @@ public class NoticeRepositoryTest {
     @Autowired
     private EntityManager em;
 
-    private Member member;
+    private Member member1;
 
     @BeforeEach
     public void setUp() {
@@ -44,14 +42,14 @@ public class NoticeRepositoryTest {
         em.flush();
         em.clear();
 
-        member = Member.builder()
+        member1 = Member.builder()
                 .email("test2@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname2")
-                .gender(Gender.FEMALE)
+                .gender(Member.Gender.FEMALE)
                 .birthDate(LocalDate.of(1997, 10, 11))
                 .job("대학생")
-                .role(Role.ADMIN)
+                .role(Member.Role.ADMIN)
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
@@ -61,12 +59,12 @@ public class NoticeRepositoryTest {
     @Test
     @DisplayName("공지사항 엔티티 등록 테스트")
     public void register() {
-        memberRepository.save(member);
+        memberRepository.save(member1);
 
         Notice notice = Notice.builder()
                 .title("DAMOA 공지사항 제목")
                 .content("DAMOA 공지사항 본문")
-                .writer(member)
+                .writer(member1)
                 .build();
 
         noticeRepository.save(notice);

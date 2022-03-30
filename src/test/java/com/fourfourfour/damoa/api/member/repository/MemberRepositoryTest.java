@@ -1,8 +1,6 @@
 package com.fourfourfour.damoa.api.member.repository;
 
 import com.fourfourfour.damoa.api.member.entity.Member;
-import com.fourfourfour.damoa.api.member.enums.Gender;
-import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,10 +41,10 @@ class MemberRepositoryTest {
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
-                .gender(Gender.FEMALE)
+                .gender(Member.Gender.FEMALE)
                 .birthDate(LocalDate.of(1997, 10, 11))
                 .job("대학생")
-                .role(Role.MEMBER)
+                .role(Member.Role.MEMBER)
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
@@ -55,10 +53,10 @@ class MemberRepositoryTest {
                 .email("test2@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname2")
-                .gender(Gender.FEMALE)
+                .gender(Member.Gender.FEMALE)
                 .birthDate(LocalDate.of(1995, 10, 11))
                 .job("고등학생")
-                .role(Role.MEMBER)
+                .role(Member.Role.MEMBER)
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();

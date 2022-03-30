@@ -1,6 +1,6 @@
 package com.fourfourfour.damoa.api.member.service;
 
-import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
+import com.fourfourfour.damoa.api.member.controller.dto.MemberRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,13 +27,13 @@ class MemberServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private ReqRegisterMemberDto reqRegisterMemberDto1;
+    private MemberRequestDto.RegisterDto registerDto1;
 
     @BeforeEach
     public void setUp() {
         memberService.deleteAll();
 
-        reqRegisterMemberDto1 = ReqRegisterMemberDto.builder()
+        registerDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -48,14 +48,14 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("이메일 중복 체크")
     void isEmailDuplication() {
-        String email = reqRegisterMemberDto1.getEmail();
+        String email = registerDto1.getEmail();
 
         // 이메일 중복 체크
         boolean isUsingEmail = memberService.isEmailDuplication(email);
         assertThat(isUsingEmail).isFalse();
 
         // 회원가입
-        memberService.register(reqRegisterMemberDto1);
+        memberService.register(registerDto1.toServiceDto());
 
         // 이메일 중복 체크
         isUsingEmail = memberService.isEmailDuplication(email);
@@ -65,14 +65,14 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("닉네임 중복 체크")
     void isNicknameDuplication() {
-        String nickname = reqRegisterMemberDto1.getNickname();
+        String nickname = registerDto1.getNickname();
 
         // 닉네임 중복 체크
         boolean isUsingNickname = memberService.isNicknameDuplication(nickname);
         assertThat(isUsingNickname).isFalse();
 
         // 회원가입
-        memberService.register(reqRegisterMemberDto1);
+        memberService.register(registerDto1.toServiceDto());
 
         // 닉네임 중복 체크
         isUsingNickname = memberService.isNicknameDuplication(nickname);
