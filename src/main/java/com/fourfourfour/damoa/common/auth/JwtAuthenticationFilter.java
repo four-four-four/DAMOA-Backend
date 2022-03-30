@@ -4,7 +4,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fourfourfour.damoa.api.member.entity.Member;
 import com.fourfourfour.damoa.api.member.repository.MemberRepository;
-import com.fourfourfour.damoa.common.message.ErrorMessage;
+import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import com.fourfourfour.damoa.common.util.JwtTokenUtil;
 import com.fourfourfour.damoa.common.util.ResponseBodyWriteUtil;
 import org.springframework.security.authentication.AuthenticationManager;

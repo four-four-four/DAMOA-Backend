@@ -1,13 +1,11 @@
 package com.fourfourfour.damoa.api.notice.service;
 
-import com.fourfourfour.damoa.api.member.dto.req.ReqRegisterMemberDto;
+import com.fourfourfour.damoa.api.member.controller.dto.MemberRequestDto;
 import com.fourfourfour.damoa.api.member.entity.Member;
-import com.fourfourfour.damoa.api.member.repository.MemberRepository;
 import com.fourfourfour.damoa.api.member.service.MemberService;
 import com.fourfourfour.damoa.api.notice.dto.req.ReqNoticeDto;
 import com.fourfourfour.damoa.api.notice.entity.Notice;
 import com.fourfourfour.damoa.api.notice.repository.NoticeRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +38,7 @@ class NoticeServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private ReqRegisterMemberDto reqRegisterMemberDto;
+    private MemberRequestDto.RegisterDto registerDto1;
 
     @BeforeEach
     public void setUp() {
@@ -48,7 +46,7 @@ class NoticeServiceImplTest {
         memberService.deleteAll();
         noticeService.deleteAll();
 
-        reqRegisterMemberDto = ReqRegisterMemberDto.builder()
+        registerDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -58,14 +56,13 @@ class NoticeServiceImplTest {
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
-
     }
 
     @Test
     @DisplayName("공지사항 등록 테스트")
     public void register() {
 
-        Member savedMember = memberService.register(reqRegisterMemberDto);
+        Member savedMember = memberService.register(registerDto1.toServiceDto());
 
         ReqNoticeDto reqNoticeDto = ReqNoticeDto.builder()
                 .title("DAMOA 공지사항 제목")
