@@ -4,13 +4,12 @@ import com.fourfourfour.damoa.api.event.entity.Event;
 import com.fourfourfour.damoa.api.event.entity.EventComment;
 import com.fourfourfour.damoa.api.keyword.entity.KeywordComment;
 import com.fourfourfour.damoa.api.keyword.entity.MemberKeyword;
-import com.fourfourfour.damoa.api.member.enums.Gender;
-import com.fourfourfour.damoa.api.member.enums.Role;
 import com.fourfourfour.damoa.api.moa.entity.MoaLike;
 import com.fourfourfour.damoa.api.notice.entity.Notice;
 import com.fourfourfour.damoa.api.notice.entity.NoticeComment;
 import com.fourfourfour.damoa.common.entity.BaseLastModifiedEntity;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
@@ -102,5 +101,48 @@ public class Member extends BaseLastModifiedEntity {
         this.privacyTerm = privacyTerm;
         this.role = role;
         this.isDeleted = false;
+    }
+
+    public enum Gender {
+
+        MALE("남성"), FEMALE("여성"), ETC("기타");
+
+        private final String description;
+
+        Gender(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    public enum Role implements GrantedAuthority {
+
+        MEMBER(ROLES.MEMBER, "회원"),
+        ADMIN(Role.ROLES.ADMIN, "관리자");
+
+        private final String authority;
+        private final String description;
+
+        Role(String authority, String description) {
+            this.authority = authority;
+            this.description = description;
+        }
+
+        @Override
+        public String getAuthority() {
+            return authority;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public static class ROLES {
+            public static final String MEMBER = "ROLE_MEMBER";
+            public static final String ADMIN = "ROLE_ADMIN";
+        }
     }
 }
