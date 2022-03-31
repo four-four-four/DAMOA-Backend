@@ -1,6 +1,6 @@
 package com.fourfourfour.damoa.domain.notice.controller;
 
-import com.fourfourfour.damoa.domain.notice.dto.req.ReqNoticeDto;
+import com.fourfourfour.damoa.domain.notice.controller.dto.NoticeRequestDto;
 import com.fourfourfour.damoa.domain.notice.service.NoticeService;
 import com.fourfourfour.damoa.common.dto.response.BaseResponseDto;
 import com.fourfourfour.damoa.common.util.AuthenticationUtil;
@@ -28,11 +28,13 @@ public class NoticeController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     @PostMapping
-    public BaseResponseDto<?> noticeRegister(@Valid @RequestBody ReqNoticeDto reqNoticeDto, Authentication authentication) {
+    public BaseResponseDto<?> noticeRegister(@Valid @RequestBody NoticeRequestDto.RegisterDto registerDto, Authentication authentication) {
+
+        log.info("공지사항 등록 = {}", registerDto);
 
         Long memberSeq = authenticationUtil.getMemberSeq(authentication);
 
-        noticeService.register(reqNoticeDto, memberSeq);
+        noticeService.register(registerDto.toServiceDto(), memberSeq);
 
         return BaseResponseDto.builder().build();
     }
