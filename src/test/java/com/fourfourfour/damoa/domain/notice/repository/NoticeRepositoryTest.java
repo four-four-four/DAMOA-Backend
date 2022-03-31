@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -57,8 +58,8 @@ public class NoticeRepositoryTest {
     }
 
     @Test
-    @DisplayName("공지사항 엔티티 등록 테스트")
-    public void register() {
+    @DisplayName("공지사항 엔티티 등록")
+    public void noticeRegister() {
         memberRepository.save(member1);
 
         Notice notice = Notice.builder()
@@ -71,12 +72,12 @@ public class NoticeRepositoryTest {
         em.flush();
         em.clear();
 
-        Notice savedNotice = noticeRepository.findBySeq(notice.getSeq());
-        assertThat(notice.getSeq()).isEqualTo(savedNotice.getSeq());
-        assertThat(notice.getTitle()).isEqualTo(savedNotice.getTitle());
-        assertThat(notice.getContent()).isEqualTo(savedNotice.getContent());
-        assertThat(notice.getViews()).isEqualTo(savedNotice.getViews());
-        assertThat(notice.getWriter().getSeq()).isEqualTo(savedNotice.getWriter().getSeq());
-        assertThat(notice.isDeleted()).isEqualTo(savedNotice.isDeleted());
+        Optional<Notice> savedNotice = noticeRepository.findBySeq(notice.getSeq());
+        assertThat(notice.getSeq()).isEqualTo(savedNotice.get().getSeq());
+        assertThat(notice.getTitle()).isEqualTo(savedNotice.get().getTitle());
+        assertThat(notice.getContent()).isEqualTo(savedNotice.get().getContent());
+        assertThat(notice.getViews()).isEqualTo(savedNotice.get().getViews());
+        assertThat(notice.getWriter().getSeq()).isEqualTo(savedNotice.get().getWriter().getSeq());
+        assertThat(notice.isDeleted()).isEqualTo(savedNotice.get().isDeleted());
     }
 }
