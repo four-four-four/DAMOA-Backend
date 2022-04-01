@@ -58,7 +58,7 @@ public class NoticeRepositoryTest {
     }
 
     @Test
-    @DisplayName("공지사항 엔티티 등록")
+    @DisplayName("공지사항 엔티티 등록 : 성공")
     public void noticeRegister() {
         memberRepository.save(member1);
 
