@@ -37,9 +37,9 @@ public class NoticeCommentRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private Member admin, member;
+    private Member admin1, member1;
 
-    private Notice notice;
+    private Notice notice1;
 
     @BeforeEach
     public void setUp() {
@@ -54,7 +54,7 @@ public class NoticeCommentRepositoryTest {
          * Member를 이용하여 생성합니다.
          */
 
-        admin = Member.builder()
+        admin1 = Member.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -66,7 +66,7 @@ public class NoticeCommentRepositoryTest {
                 .privacyTerm(true)
                 .build();
 
-        member = Member.builder()
+        member1 = Member.builder()
                 .email("test2@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname2")
@@ -78,10 +78,10 @@ public class NoticeCommentRepositoryTest {
                 .privacyTerm(true)
                 .build();
 
-        notice = Notice.builder()
+        notice1 = Notice.builder()
                 .title("공지사항 제목")
                 .content("공지사항 본문")
-                .writer(admin)
+                .writer(admin1)
                 .build();
     }
 
@@ -89,16 +89,16 @@ public class NoticeCommentRepositoryTest {
     @DisplayName("공지사항 댓글 엔티티 등록")
     public void commentRegister() {
         // 회원가입
-        memberRepository.save(admin);
-        memberRepository.save(member);
+        memberRepository.save(admin1);
+        memberRepository.save(member1);
 
         // 공지사항 엔티티 저장
-        noticeRepository.save(notice);
+        noticeRepository.save(notice1);
 
         // 공지사항 댓글 엔티티 저장
         NoticeComment noticeComment = NoticeComment.builder()
-                .notice(notice)
-                .writer(member)
+                .notice(notice1)
+                .writer(member1)
                 .content("DAMOA 공지사항 댓글")
                 .build();
 
