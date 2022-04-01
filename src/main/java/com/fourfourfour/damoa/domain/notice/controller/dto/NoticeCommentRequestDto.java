@@ -12,22 +12,19 @@ import javax.validation.constraints.NotBlank;
 public class NoticeCommentRequestDto {
 
     @Getter
-    @ToString(of = {"noticeSeq", "content"})
+    @ToString(of = {"content"})
     @NoArgsConstructor
     public static class RegisterDto {
-
-        private Long noticeSeq;
 
         @NotBlank(message = "{blank.notice.comment}")
         private String content;
 
         @Builder
-        public RegisterDto(Long noticeSeq, String content) {
-            this.noticeSeq = noticeSeq;
+        public RegisterDto(String content) {
             this.content = content;
         }
 
-        public NoticeCommentDto.RegisterDto toServiceDto() {
+        public NoticeCommentDto.RegisterDto toServiceDto(Long noticeSeq) {
             return NoticeCommentDto.RegisterDto.builder()
                     .noticeSeq(noticeSeq)
                     .content(content)
