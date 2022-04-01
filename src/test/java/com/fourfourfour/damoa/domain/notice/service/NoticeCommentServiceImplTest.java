@@ -45,9 +45,9 @@ public class NoticeCommentServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private MemberRequestDto.RegisterDto adminRegisterDto, memberRegisterDto;
+    private MemberRequestDto.RegisterDto adminRegisterDto1, memberRegisterDto1;
 
-    private NoticeRequestDto.RegisterDto noticeRegisterDto;
+    private NoticeRequestDto.RegisterDto noticeRegisterDto1;
 
     @BeforeEach
     public void setUp() {
@@ -63,7 +63,7 @@ public class NoticeCommentServiceImplTest {
          * 위와 같이 가정합니다.
          */
 
-        adminRegisterDto = MemberRequestDto.RegisterDto.builder()
+        adminRegisterDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -74,7 +74,7 @@ public class NoticeCommentServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
-        memberRegisterDto = MemberRequestDto.RegisterDto.builder()
+        memberRegisterDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test2@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname2")
@@ -85,7 +85,7 @@ public class NoticeCommentServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
-        noticeRegisterDto = NoticeRequestDto.RegisterDto.builder()
+        noticeRegisterDto1 = NoticeRequestDto.RegisterDto.builder()
                 .title("공지사항 제목")
                 .content("공지사항 본문")
                 .build();
@@ -95,25 +95,23 @@ public class NoticeCommentServiceImplTest {
     @DisplayName("공지사항 댓글 작성 - 성공")
     public void commentRegisterSuccess() {
         // 회원가입
-        Member savedAdmin = memberService.register(adminRegisterDto.toServiceDto());
-        Member savedMember = memberService.register(memberRegisterDto.toServiceDto());
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
+        Member savedMember = memberService.register(memberRegisterDto1.toServiceDto());
 
         // 공지사항 등록
-        Notice savedNotice = noticeService.register(noticeRegisterDto.toServiceDto(), savedAdmin.getSeq());
+        Notice savedNotice = noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
 
         // 작성된 공지사항 댓글 작성
         NoticeCommentRequestDto.RegisterDto noticeCommentRegisterDto = NoticeCommentRequestDto.RegisterDto.builder()
-                .noticeSeq(savedNotice.getSeq())
                 .content("DAMOA 공지사항 댓글")
                 .build();
 
-        NoticeComment savedNoticeComment = noticeCommentService.register(noticeCommentRegisterDto.toServiceDto(), savedMember.getSeq());
+        NoticeComment savedNoticeComment = noticeCommentService.register(noticeCommentRegisterDto.toServiceDto(savedNotice.getSeq()), savedMember.getSeq());
         em.flush();
         em.clear();
 
         // 작성된 댓글 검증
         Optional<NoticeComment> findNoticeComment = noticeCommentRepository.findBySeq(savedNoticeComment.getSeq());
-        assertThat(noticeCommentRegisterDto.getNoticeSeq()).isEqualTo(findNoticeComment.get().getNotice().getSeq());
         assertThat(noticeCommentRegisterDto.getContent()).isEqualTo(findNoticeComment.get().getContent());
     }
 
@@ -121,14 +119,13 @@ public class NoticeCommentServiceImplTest {
     @DisplayName("공지사항 댓글 작성 - 예외 처리 : 공지사항 데이터 없을 때")
     public void commentRegisterFailWhenNoticeNull() {
 
-        Member savedMember = memberService.register(memberRegisterDto.toServiceDto());
+        Member savedMember = memberService.register(memberRegisterDto1.toServiceDto());
 
         NoticeCommentRequestDto.RegisterDto noticeCommentRegisterDto = NoticeCommentRequestDto.RegisterDto.builder()
-                .noticeSeq(0L)
                 .content("DAMOA 공지사항 댓글")
                 .build();
 
-        assertThatThrownBy(() -> noticeCommentService.register(noticeCommentRegisterDto.toServiceDto(), savedMember.getSeq()))
+        assertThatThrownBy(() -> noticeCommentService.register(noticeCommentRegisterDto.toServiceDto(0L), savedMember.getSeq()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_NOTICE);
     }
