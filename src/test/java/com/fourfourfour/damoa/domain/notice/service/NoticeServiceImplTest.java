@@ -40,9 +40,9 @@ class NoticeServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private MemberRequestDto.RegisterDto adminRegisterDto;
+    private MemberRequestDto.RegisterDto adminRegisterDto1;
 
-    private NoticeRequestDto.RegisterDto noticeRegisterDto;
+    private NoticeRequestDto.RegisterDto noticeRegisterDto1;
 
     @BeforeEach
     public void setUp() {
@@ -53,7 +53,7 @@ class NoticeServiceImplTest {
          * 관리자 프로젝트 구성이 완료될 때까지
          * adminRegisterDto를 관리자로 가정합니다.
          */
-        adminRegisterDto = MemberRequestDto.RegisterDto.builder()
+        adminRegisterDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -64,7 +64,7 @@ class NoticeServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
-        noticeRegisterDto = NoticeRequestDto.RegisterDto.builder()
+        noticeRegisterDto1 = NoticeRequestDto.RegisterDto.builder()
                 .title("DAMOA 공지사항 제목")
                 .content("DAMOA 공지사항 본문")
                 .build();
@@ -74,23 +74,23 @@ class NoticeServiceImplTest {
     @DisplayName("공지사항 등록 - 성공")
     public void noticeRegisterSuccess() {
         // 회원가입
-        Member savedAdmin = memberService.register(adminRegisterDto.toServiceDto());
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
 
         // 공지사항 등록
-        Notice savedNotice = noticeService.register(noticeRegisterDto.toServiceDto(), savedAdmin.getSeq());
+        Notice savedNotice = noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
         em.flush();
         em.clear();
 
         // 작성된 공지사항 등록 검증
         Optional<Notice> findNotice = noticeRepository.findBySeq(savedNotice.getSeq());
-        assertThat(noticeRegisterDto.getTitle()).isEqualTo(findNotice.get().getTitle());
-        assertThat(noticeRegisterDto.getContent()).isEqualTo(findNotice.get().getContent());
+        assertThat(noticeRegisterDto1.getTitle()).isEqualTo(findNotice.get().getTitle());
+        assertThat(noticeRegisterDto1.getContent()).isEqualTo(findNotice.get().getContent());
     }
 
     @Test
     @DisplayName("공지사항 등록 - 예외 처리 : 관리자가 존재하지 않을 때")
     public void registerFailWhenAdminNull() {
-        assertThatThrownBy(() -> noticeService.register(noticeRegisterDto.toServiceDto(), 0L))
+        assertThatThrownBy(() -> noticeService.register(noticeRegisterDto1.toServiceDto(), 0L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_MEMBER);
     }
