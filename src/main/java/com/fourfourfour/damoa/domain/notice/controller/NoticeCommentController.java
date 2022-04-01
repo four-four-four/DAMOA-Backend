@@ -8,16 +8,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/notice/comment")
+@RequestMapping("/api/v1/notice/{noticeSeq}/comments")
 public class NoticeCommentController {
 
     private final NoticeCommentService noticeCommentService;
@@ -27,12 +26,15 @@ public class NoticeCommentController {
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
     @ResponseStatus(CREATED)
     @PostMapping
-    public BaseResponseDto<?> commentRegister(@Valid @RequestBody NoticeCommentRequestDto.RegisterDto registerDto, Authentication authentication) {
-        log.info("공지사항 댓글 등록 = {}", registerDto);
+    public BaseResponseDto<?> commentRegister(@Validated @RequestBody NoticeCommentRequestDto.RegisterDto registerDto,
+                                              @PathVariable Long noticeSeq,
+                                              Authentication authentication) {
+
+        log.info("공지사항 댓글 등록 = noticeSeq={}, {}", noticeSeq, registerDto);
 
         Long memberSeq = authenticationUtil.getMemberSeq(authentication);
 
-        noticeCommentService.register(registerDto.toServiceDto(), memberSeq);
+        noticeCommentService.register(registerDto.toServiceDto(noticeSeq), memberSeq);
 
         return BaseResponseDto.builder().build();
     }
