@@ -1,9 +1,10 @@
 package com.fourfourfour.damoa.domain.notice.service;
 
+import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import com.fourfourfour.damoa.domain.member.controller.dto.MemberRequestDto;
 import com.fourfourfour.damoa.domain.member.entity.Member;
 import com.fourfourfour.damoa.domain.member.service.MemberService;
-import com.fourfourfour.damoa.domain.notice.dto.req.ReqNoticeDto;
+import com.fourfourfour.damoa.domain.notice.controller.dto.NoticeRequestDto;
 import com.fourfourfour.damoa.domain.notice.entity.Notice;
 import com.fourfourfour.damoa.domain.notice.repository.NoticeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -38,15 +40,20 @@ class NoticeServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private MemberRequestDto.RegisterDto registerDto1;
+    private MemberRequestDto.RegisterDto adminRegisterDto1;
+
+    private NoticeRequestDto.RegisterDto noticeRegisterDto1;
 
     @BeforeEach
     public void setUp() {
 
         memberService.deleteAll();
         noticeService.deleteAll();
-
-        registerDto1 = MemberRequestDto.RegisterDto.builder()
+        /**
+         * 관리자 프로젝트 구성이 완료될 때까지
+         * adminRegisterDto를 관리자로 가정합니다.
+         */
+        adminRegisterDto1 = MemberRequestDto.RegisterDto.builder()
                 .email("test1@damoa.com")
                 .password(passwordEncoder.encode("Abcdefg1!"))
                 .nickname("testNickname1")
@@ -56,25 +63,35 @@ class NoticeServiceImplTest {
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
-    }
 
-    @Test
-    @DisplayName("공지사항 등록 테스트")
-    public void register() {
-
-        Member savedMember = memberService.register(registerDto1.toServiceDto());
-
-        ReqNoticeDto reqNoticeDto = ReqNoticeDto.builder()
+        noticeRegisterDto1 = NoticeRequestDto.RegisterDto.builder()
                 .title("DAMOA 공지사항 제목")
                 .content("DAMOA 공지사항 본문")
                 .build();
+    }
 
-        Notice savedNotice = noticeService.register(reqNoticeDto, savedMember.getSeq());
+    @Test
+    @DisplayName("공지사항 등록 - 성공")
+    public void noticeRegisterSuccess() {
+        // 회원가입
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
+
+        // 공지사항 등록
+        Notice savedNotice = noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
         em.flush();
         em.clear();
 
-        Notice findNotice = noticeRepository.findBySeq(savedNotice.getSeq());
-        assertThat(reqNoticeDto.getTitle()).isEqualTo(findNotice.getTitle());
-        assertThat(reqNoticeDto.getContent()).isEqualTo(findNotice.getContent());
+        // 작성된 공지사항 등록 검증
+        Optional<Notice> findNotice = noticeRepository.findBySeq(savedNotice.getSeq());
+        assertThat(noticeRegisterDto1.getTitle()).isEqualTo(findNotice.get().getTitle());
+        assertThat(noticeRegisterDto1.getContent()).isEqualTo(findNotice.get().getContent());
+    }
+
+    @Test
+    @DisplayName("공지사항 등록 - 예외 처리 : 관리자가 존재하지 않을 때")
+    public void registerFailWhenAdminNull() {
+        assertThatThrownBy(() -> noticeService.register(noticeRegisterDto1.toServiceDto(), 0L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NULL_MEMBER);
     }
 }

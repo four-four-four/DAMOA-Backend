@@ -2,10 +2,10 @@ package com.fourfourfour.damoa.domain.notice.service;
 
 import com.fourfourfour.damoa.domain.member.entity.Member;
 import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
-import com.fourfourfour.damoa.domain.notice.dto.req.ReqNoticeDto;
 import com.fourfourfour.damoa.domain.notice.entity.Notice;
 import com.fourfourfour.damoa.domain.notice.repository.NoticeRepository;
 import com.fourfourfour.damoa.common.constant.ErrorMessage;
+import com.fourfourfour.damoa.domain.notice.service.dto.NoticeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,14 +24,14 @@ public class NoticeServiceImpl implements NoticeService{
 
     @Override
     @Transactional
-    public Notice register(ReqNoticeDto reqNoticeDto, Long memberSeq) {
+    public Notice register(NoticeDto.RegisterDto registerDto, Long memberSeq) {
 
         Member findMember = memberRepository.findBySeq(memberSeq)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
 
         Notice newNotice = Notice.builder()
-                .title(reqNoticeDto.getTitle())
-                .content(reqNoticeDto.getContent())
+                .title(registerDto.getTitle())
+                .content(registerDto.getContent())
                 .writer(findMember)
                 .build();
 
