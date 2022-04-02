@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/notice")
+@RequestMapping("/api/v1/notices")
 public class NoticeController {
 
     private final NoticeService noticeService;
