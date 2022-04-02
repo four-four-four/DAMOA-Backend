@@ -6,10 +6,11 @@
 
 ## 어떤 이유로 PR을 하셨나요?
 
-- [ ] feature
-- [ ] bug-fix
+- [ ] common
+- [ ] feature, util
 - [ ] refactor
-- [ ] 기타(아래 설명에 자세한 내용을 기입해주세요)
+- [ ] bug-fix
+- [ ] 기타 (아래 내용에 자세한 내용을 기입해주세요)
 
 ## PR 내용:
 
