@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/notice/{noticeSeq}/comments")
+@RequestMapping("/api/v1/notices/{noticeSeq}/comments")
 public class NoticeCommentController {
 
     private final NoticeCommentService noticeCommentService;
@@ -30,7 +30,7 @@ public class NoticeCommentController {
                                               @PathVariable Long noticeSeq,
                                               Authentication authentication) {
 
-        log.info("공지사항 댓글 등록 = noticeSeq={}, {}", noticeSeq, registerDto);
+        log.info("공지사항 댓글 등록 = {}, {}", noticeSeq, registerDto);
 
         Long memberSeq = authenticationUtil.getMemberSeq(authentication);
 
