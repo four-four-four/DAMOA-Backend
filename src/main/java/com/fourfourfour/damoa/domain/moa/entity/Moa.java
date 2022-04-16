@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Moa extends BaseCreatedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "moa_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

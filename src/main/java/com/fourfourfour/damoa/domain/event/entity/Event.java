@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Event extends BaseLastModifiedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_seq")
     private Long seq;
 

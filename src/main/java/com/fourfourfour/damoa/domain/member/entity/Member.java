@@ -32,7 +32,7 @@ import static lombok.AccessLevel.*;
 @Entity
 public class Member extends BaseLastModifiedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

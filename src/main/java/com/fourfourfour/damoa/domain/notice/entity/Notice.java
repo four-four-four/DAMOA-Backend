@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Notice extends BaseLastModifiedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Keyword extends BaseCreatedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "keyword_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
