@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class NoticeComment extends BaseLastModifiedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

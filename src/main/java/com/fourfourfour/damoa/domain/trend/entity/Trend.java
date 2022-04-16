@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Trend extends BaseLastModifiedEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trend_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

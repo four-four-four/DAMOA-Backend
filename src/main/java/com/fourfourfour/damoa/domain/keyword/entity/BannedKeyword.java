@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class BannedKeyword extends BaseCreatedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "banned_keyword_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 

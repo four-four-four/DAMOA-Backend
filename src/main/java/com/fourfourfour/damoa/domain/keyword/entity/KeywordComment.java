@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class KeywordComment extends BaseLastModifiedEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_seq", columnDefinition = "BIGINT UNSIGNED")
     private Long seq;
 
