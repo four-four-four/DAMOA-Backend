@@ -7,16 +7,19 @@ import com.fourfourfour.damoa.domain.member.service.MemberService;
 import com.fourfourfour.damoa.domain.notice.controller.dto.NoticeRequestDto;
 import com.fourfourfour.damoa.domain.notice.entity.Notice;
 import com.fourfourfour.damoa.domain.notice.repository.NoticeRepository;
+import com.fourfourfour.damoa.domain.notice.service.dto.NoticeResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -40,9 +43,9 @@ class NoticeServiceImplTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private MemberRequestDto.RegisterDto adminRegisterDto1;
+    private MemberRequestDto.RegisterDto adminRegisterDto1, memberRegisterDto1;
 
-    private NoticeRequestDto.RegisterDto noticeRegisterDto1;
+    private NoticeRequestDto.RegisterDto noticeRegisterDto1, noticeRegisterDto2, noticeRegisterDto3, noticeRegisterDto4, noticeRegisterDto5;
 
     @BeforeEach
     public void setUp() {
@@ -64,9 +67,33 @@ class NoticeServiceImplTest {
                 .privacyTerm(true)
                 .build();
 
+        memberRegisterDto1 = MemberRequestDto.RegisterDto.builder()
+                .email("test2@damoa.com")
+                .password(passwordEncoder.encode("Abcdefg1!"))
+                .nickname("testNickname2")
+                .gender("male")
+                .birthDate(LocalDate.of(1998, 10, 11))
+                .job("전문직")
+                .serviceTerm(true)
+                .privacyTerm(true)
+                .build();
+
+        String title = "DAMOA 공지사항 제목";
+        String content = "DAMOA 공지사항 본문";
+
         noticeRegisterDto1 = NoticeRequestDto.RegisterDto.builder()
-                .title("DAMOA 공지사항 제목")
-                .content("DAMOA 공지사항 본문")
+                .title(title + "1")
+                .content(content + "1")
+                .build();
+
+        noticeRegisterDto2 = NoticeRequestDto.RegisterDto.builder()
+                .title(title + "2")
+                .content(content + "2")
+                .build();
+
+        noticeRegisterDto3 = NoticeRequestDto.RegisterDto.builder()
+                .title(title + "3")
+                .content(content + "3")
                 .build();
     }
 
@@ -93,5 +120,55 @@ class NoticeServiceImplTest {
         assertThatThrownBy(() -> noticeService.register(noticeRegisterDto1.toServiceDto(), 0L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_MEMBER);
+    }
+
+    @Test
+    @DisplayName("공지사항 목록 조회 - 성공")
+    public void findNoticeForPageSuccess() throws InterruptedException{
+        // 공지사항 목록 존재하지 않을 때 검증
+        PageRequest pageable = PageRequest.of(1, 3);
+        NoticeResponseDto.NoticeListPage page1 = noticeService.getPage(pageable);
+        assertThat(page1.getTotalCount()).isEqualTo(0);
+        assertThat(page1.getCurrentPage()).isEqualTo(1);
+        assertThat(page1.getTotalPage()).isEqualTo(0);
+
+        // 회원가입
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
+        memberService.register(memberRegisterDto1.toServiceDto());
+
+        // 공지사항 등록
+        noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
+        Thread.sleep(1000);
+        noticeService.register(noticeRegisterDto2.toServiceDto(), savedAdmin.getSeq());
+        Thread.sleep(1000);
+        noticeService.register(noticeRegisterDto3.toServiceDto(), savedAdmin.getSeq());
+        Thread.sleep(1000);
+
+        em.flush();
+        em.clear();
+
+        // 작성된 공지사항 목록 페이징 검증
+        NoticeResponseDto.NoticeListPage page2 = noticeService.getPage(pageable);
+        assertThat(page2.getTotalCount()).isEqualTo(3);
+        assertThat(page2.getCurrentPage()).isEqualTo(1);
+        assertThat(page2.getTotalPage()).isEqualTo(1);
+        assertThat(page2.getNoticeForPage().size()).isEqualTo(3);
+
+        // 작성된 공지사항 목록 검증
+        List<NoticeResponseDto.ForPage> findNoticeForPage = page2.getNoticeForPage();
+        NoticeResponseDto.ForPage noticeForPage1 = findNoticeForPage.get(0);
+        assertThat(noticeForPage1.getTitle()).isEqualTo(noticeRegisterDto3.getTitle());
+        assertThat(noticeForPage1.getWriter()).isEqualTo(savedAdmin.getNickname());
+        assertThat(noticeForPage1.getViews()).isEqualTo(0);
+
+        NoticeResponseDto.ForPage noticeForPage2 = findNoticeForPage.get(1);
+        assertThat(noticeForPage2.getTitle()).isEqualTo(noticeRegisterDto2.getTitle());
+        assertThat(noticeForPage2.getWriter()).isEqualTo(savedAdmin.getNickname());
+        assertThat(noticeForPage2.getViews()).isEqualTo(0);
+
+        NoticeResponseDto.ForPage noticeForPage3 = findNoticeForPage.get(2);
+        assertThat(noticeForPage3.getTitle()).isEqualTo(noticeRegisterDto1.getTitle());
+        assertThat(noticeForPage3.getWriter()).isEqualTo(savedAdmin.getNickname());
+        assertThat(noticeForPage3.getViews()).isEqualTo(0);
     }
 }
