@@ -158,7 +158,6 @@ public class NoticeRepositoryTest {
         noticeRepository.save(notice2);
         Thread.sleep(1000);
         noticeRepository.save(notice3);
-        Thread.sleep(1000);
 
         em.flush();
         em.clear();
