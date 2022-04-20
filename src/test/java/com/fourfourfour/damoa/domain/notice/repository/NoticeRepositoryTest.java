@@ -136,7 +136,7 @@ public class NoticeRepositoryTest {
 
         // 공지사항 개수 조회 검증
         Integer findNotices = noticeRepository.countAllNotice();
-        assertThat(findNotices).isEqualTo(5);
+        assertThat(findNotices).isEqualTo(3);
     }
 
     @Test
