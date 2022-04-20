@@ -142,7 +142,6 @@ class NoticeServiceImplTest {
         noticeService.register(noticeRegisterDto2.toServiceDto(), savedAdmin.getSeq());
         Thread.sleep(1000);
         noticeService.register(noticeRegisterDto3.toServiceDto(), savedAdmin.getSeq());
-        Thread.sleep(1000);
 
         // 작성된 공지사항 목록 페이징 검증
         NoticeResponseDto.NoticeListPage page2 = noticeService.getPage(pageable);
