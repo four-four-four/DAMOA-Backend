@@ -45,7 +45,7 @@ class NoticeServiceImplTest {
 
     private MemberRequestDto.RegisterDto adminRegisterDto1, memberRegisterDto1;
 
-    private NoticeRequestDto.RegisterDto noticeRegisterDto1, noticeRegisterDto2, noticeRegisterDto3, noticeRegisterDto4, noticeRegisterDto5;
+    private NoticeRequestDto.RegisterDto noticeRegisterDto1, noticeRegisterDto2, noticeRegisterDto3;
 
     @BeforeEach
     public void setUp() {
@@ -143,9 +143,6 @@ class NoticeServiceImplTest {
         Thread.sleep(1000);
         noticeService.register(noticeRegisterDto3.toServiceDto(), savedAdmin.getSeq());
         Thread.sleep(1000);
-
-        em.flush();
-        em.clear();
 
         // 작성된 공지사항 목록 페이징 검증
         NoticeResponseDto.NoticeListPage page2 = noticeService.getPage(pageable);
