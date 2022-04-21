@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeRepositoryCustom {
 
     @Query("SELECT n FROM Notice n WHERE n.seq = :seq AND n.isDeleted = FALSE")
     Optional<Notice> findBySeq(@Param("seq") Long seq);
