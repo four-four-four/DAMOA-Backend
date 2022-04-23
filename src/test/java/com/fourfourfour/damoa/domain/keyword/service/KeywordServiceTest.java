@@ -75,4 +75,23 @@ class KeywordServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_MEMBER);
     }
+
+    @Test
+    @DisplayName("회원 등록 키워드 목록 조회 - 성공 : 키워드가 없는 경우")
+    void findMemberKeywordListNonExist() {
+        /**
+         * 회원가입
+         */
+        Member savedMember = memberService.register(memberRegisterDto1.toServiceDto());
+
+        /**
+         * 회원 등록 키워드 목록 조회
+         */
+        List<KeywordDto.BasicDto> keywordBasicList = keywordService.keywordBasicList(savedMember.getSeq());
+
+        /**
+         * 데이터 검증
+         */
+        assertThat(keywordBasicList).isNull();
+    }
 }
