@@ -26,7 +26,7 @@ public class NoticeCommentController {
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
     @ResponseStatus(CREATED)
     @PostMapping
-    public BaseResponseDto<?> commentRegister(@Validated @RequestBody NoticeCommentRequestDto.RegisterDto registerDto,
+    public BaseResponseDto<Void> commentRegister(@Validated @RequestBody NoticeCommentRequestDto.RegisterDto registerDto,
                                               @PathVariable Long noticeSeq,
                                               Authentication authentication) {
 
@@ -36,6 +36,6 @@ public class NoticeCommentController {
 
         noticeCommentService.register(registerDto.toServiceDto(noticeSeq), memberSeq);
 
-        return BaseResponseDto.builder().build();
+        return BaseResponseDto.<Void>builder().build();
     }
 }
