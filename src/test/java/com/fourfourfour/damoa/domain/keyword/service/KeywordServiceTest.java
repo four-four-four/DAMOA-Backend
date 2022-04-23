@@ -94,4 +94,57 @@ class KeywordServiceTest {
          */
         assertThat(keywordBasicList).isNull();
     }
+
+    @Test
+    @DisplayName("회원 등록 키워드 목록 조회 - 성공 : 키워드가 있는 경우")
+    void findMemberKeywordListExist() {
+        /**
+         * 회원가입
+         */
+        Member savedMember = memberService.register(memberRegisterDto1.toServiceDto());
+
+        /**
+         * 키워드 등록 서비스 메서드가 없기 때문에 레파지토리 메서드로 대체합니다.
+         */
+        Keyword savedKeyword1 = keywordRepository.save(Keyword.builder()
+                .name("키워드1")
+                .build());
+        Keyword savedKeyword2 = keywordRepository.save(Keyword.builder()
+                .name("키워드2")
+                .build());
+        em.flush();
+        em.clear();
+
+        /**
+         * 회원 키워드 등록 서비스 메서드가 없기 때문에 레파지토리 메서드로 대체합니다.
+         */
+        MemberKeyword savedMemberKeyword1 = memberKeywordRepository.save(MemberKeyword.builder()
+                .member(savedMember)
+                .keyword(savedKeyword1)
+                .build());
+        MemberKeyword savedMemberKeyword2 = memberKeywordRepository.save(MemberKeyword.builder()
+                .member(savedMember)
+                .keyword(savedKeyword2)
+                .build());
+        em.flush();
+        em.clear();
+
+        /**
+         * 회원 등록 키워드 목록 조회
+         */
+        List<KeywordDto.BasicDto> keywordBasicList = keywordService.keywordBasicList(savedMember.getSeq());
+
+        /**
+         * 데이터 검증
+         */
+        assertThat(keywordBasicList.size()).isEqualTo(2);
+
+        KeywordDto.BasicDto keywordBasicDto1 = keywordBasicList.get(0);
+        assertThat(keywordBasicDto1.getSeq()).isEqualTo(savedKeyword1.getSeq());
+        assertThat(keywordBasicDto1.getName()).isEqualTo(savedKeyword1.getName());
+
+        KeywordDto.BasicDto keywordBasicDto2 = keywordBasicList.get(1);
+        assertThat(keywordBasicDto2.getSeq()).isEqualTo(savedKeyword2.getSeq());
+        assertThat(keywordBasicDto2.getName()).isEqualTo(savedKeyword2.getName());
+    }
 }
