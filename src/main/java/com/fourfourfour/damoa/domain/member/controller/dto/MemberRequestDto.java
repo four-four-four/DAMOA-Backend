@@ -20,7 +20,7 @@ public class MemberRequestDto {
     @NoArgsConstructor
     public static class RegisterDto {
 
-        @Pattern(regexp = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$", message = "{pattern.member.email}")
+        @Pattern(regexp = "^[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*\\.[a-zA-Z]{2,3}$", message = "{pattern.member.email}")
         private String email;
 
         @Pattern(regexp = "^((?=.*[a-z])(?=.*\\d)((?=.*\\W)|(?=.*[A-Z]))|(?=.*\\W)(?=.*[A-Z])((?=.*\\d)|(?=.*[a-z]))).{8,20}$", message = "{pattern.member.password}")
