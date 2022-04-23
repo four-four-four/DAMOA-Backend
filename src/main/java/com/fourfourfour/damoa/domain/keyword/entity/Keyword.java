@@ -1,5 +1,6 @@
 package com.fourfourfour.damoa.domain.keyword.entity;
 
+import com.fourfourfour.damoa.domain.keyword.service.dto.KeywordDto;
 import com.fourfourfour.damoa.domain.moa.entity.Moa;
 import com.fourfourfour.damoa.common.entity.BaseCreatedEntity;
 import lombok.Builder;
@@ -46,5 +47,12 @@ public class Keyword extends BaseCreatedEntity {
         this.name = name;
         this.isFiltered = false;
         this.isDeleted = false;
+    }
+
+    public KeywordDto.BasicDto toBasicDto() {
+        return KeywordDto.BasicDto.builder()
+                .seq(seq)
+                .name(name)
+                .build();
     }
 }
