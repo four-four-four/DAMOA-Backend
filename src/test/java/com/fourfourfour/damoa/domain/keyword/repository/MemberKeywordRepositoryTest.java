@@ -86,4 +86,52 @@ class MemberKeywordRepositoryTest {
                 .orElse(null);
         assertThat(findMemberKeywords.size()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("회원 엔티티로 회원 키워드 엔티티 목록 조회 - 성공 : 키워드가 있는 경우")
+    void findMemberKeywordListExistByMember() {
+        /**
+         * 테스트용 데이터 생성
+         */
+        Member savedMember = memberRepository.save(member1);
+        keywordRepository.save(keyword1);
+        keywordRepository.save(keyword2);
+        em.flush();
+        em.clear();
+
+        /**
+         * 키워드 등록
+         */
+        MemberKeyword memberKeyword1 = MemberKeyword.builder()
+                .member(member1)
+                .keyword(keyword1)
+                .build();
+        MemberKeyword memberKeyword2 = MemberKeyword.builder()
+                .member(member1)
+                .keyword(keyword2)
+                .build();
+        memberKeywordRepository.save(memberKeyword1);
+        memberKeywordRepository.save(memberKeyword2);
+        em.flush();
+        em.clear();
+
+        /**
+         * 회원 키워드 엔티티 목록 조회
+         */
+        List<MemberKeyword> findMemberKeywords = memberKeywordRepository.findAllByMember(savedMember)
+                .orElse(null);
+
+        /**
+         * 데이터 검증
+         */
+        assertThat(findMemberKeywords.size()).isEqualTo(2);
+
+        MemberKeyword findMemberKeyword1 = findMemberKeywords.get(0);
+        assertThat(findMemberKeyword1.getMember().getSeq()).isEqualTo(member1.getSeq());
+        assertThat(findMemberKeyword1.getKeyword().getSeq()).isEqualTo(keyword1.getSeq());
+
+        MemberKeyword findMemberKeyword2 = findMemberKeywords.get(1);
+        assertThat(findMemberKeyword2.getMember().getSeq()).isEqualTo(member1.getSeq());
+        assertThat(findMemberKeyword2.getKeyword().getSeq()).isEqualTo(keyword2.getSeq());
+    }
 }
