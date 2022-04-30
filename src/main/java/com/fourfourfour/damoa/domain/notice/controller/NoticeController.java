@@ -30,7 +30,7 @@ public class NoticeController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     @PostMapping
-    public BaseResponseDto<?> noticeRegister(@Valid @RequestBody NoticeRequestDto.RegisterDto registerDto, Authentication authentication) {
+    public BaseResponseDto<Void> noticeRegister(@Valid @RequestBody NoticeRequestDto.RegisterDto registerDto, Authentication authentication) {
 
         log.info("공지사항 등록 = {}", registerDto);
 
@@ -38,7 +38,7 @@ public class NoticeController {
 
         noticeService.register(registerDto.toServiceDto(), memberSeq);
 
-        return BaseResponseDto.builder().build();
+        return BaseResponseDto.<Void>builder().build();
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
