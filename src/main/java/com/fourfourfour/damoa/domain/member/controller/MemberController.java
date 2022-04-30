@@ -63,7 +63,7 @@ public class MemberController {
     public ResponseEntity<BaseResponseDto<?>> checkEmailDuplicate(@PathVariable String email) {
         log.info("이메일 중복 확인 [{}]", email);
 
-        String emailChk = "^[a-zA-Z0-9]([._-]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*.[a-zA-Z]$";
+        String emailChk = "^[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*@[a-zA-Z0-9]([-_.]?[a-zA-Z0-9])*\\.[a-zA-Z]{2,3}$";
         if (!email.matches(emailChk)) {
             throw new IllegalArgumentException(ErrorMessage.PATTERN_MEMBER_EMAIL);
         }
