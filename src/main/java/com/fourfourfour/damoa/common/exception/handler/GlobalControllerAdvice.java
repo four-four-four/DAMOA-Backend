@@ -1,7 +1,6 @@
 package com.fourfourfour.damoa.common.exception.handler;
 
 import com.fourfourfour.damoa.common.dto.response.ErrorResponseDto;
-import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,7 +44,6 @@ public class GlobalControllerAdvice {
         }
 
         return ErrorResponseDto.<Map<String, Object>>builder()
-                .message(ErrorMessage.PATTERN)
                 .data(data)
                 .build();
     }
@@ -55,7 +53,6 @@ public class GlobalControllerAdvice {
     public ErrorResponseDto<?> illegalArgumentExceptionHandler(IllegalArgumentException e) {
         logPrint(e);
         return ErrorResponseDto.builder()
-                .message(e.getMessage())
                 .build();
     }
 
@@ -64,7 +61,6 @@ public class GlobalControllerAdvice {
     public ErrorResponseDto<?> accessDeniedExceptionHandler(AccessDeniedException e) {
         logPrint(e);
         return ErrorResponseDto.builder()
-                .message(ErrorMessage.FORBIDDEN)
                 .build();
     }
 
@@ -73,7 +69,6 @@ public class GlobalControllerAdvice {
     public ErrorResponseDto<?> exceptionHandler(Exception e) {
         logPrint(e);
         return ErrorResponseDto.builder()
-                .message(ErrorMessage.ERROR)
                 .build();
     }
 

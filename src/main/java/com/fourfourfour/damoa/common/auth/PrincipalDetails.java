@@ -1,7 +1,7 @@
 package com.fourfourfour.damoa.common.auth;
 
 import com.fourfourfour.damoa.domain.member.entity.Member;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,16 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Data
+@RequiredArgsConstructor
 public class PrincipalDetails implements UserDetails {
 
-    private Member member;
+    private final Member member;
 
     List<GrantedAuthority> roles = new ArrayList<>();
-
-    public PrincipalDetails(Member member) {
-        this.member = member;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -27,6 +23,10 @@ public class PrincipalDetails implements UserDetails {
 
     public void setAuthorities(List<GrantedAuthority> roles) {
         this.roles = roles;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     @Override

@@ -7,11 +7,10 @@ import com.fourfourfour.damoa.domain.notice.service.NoticeCommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @Slf4j
 @RestController
@@ -26,13 +25,8 @@ public class NoticeCommentController {
     @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
     @ResponseStatus(CREATED)
     @PostMapping
-    public BaseResponseDto<Void> commentRegister(@Validated @RequestBody NoticeCommentRequestDto.RegisterDto registerDto,
-                                              @PathVariable Long noticeSeq,
-                                              Authentication authentication) {
-
-        log.info("공지사항 댓글 등록 = {}, {}", noticeSeq, registerDto);
-
-        Long memberSeq = authenticationUtil.getMemberSeq(authentication);
+    public BaseResponseDto<Void> commentRegister(@Validated @RequestBody NoticeCommentRequestDto.RegisterDto registerDto, @PathVariable Long noticeSeq) {
+        Long memberSeq = authenticationUtil.getMemberSeq();
 
         noticeCommentService.register(registerDto.toServiceDto(noticeSeq), memberSeq);
 

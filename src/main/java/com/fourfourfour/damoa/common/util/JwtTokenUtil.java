@@ -36,10 +36,11 @@ public class JwtTokenUtil {
         this.expirationTime = expirationTime;
     }
 
-    public static String getToken(String email) {
+    public static String getToken(Long seq, String email) {
         Date expires = JwtTokenUtil.getTokenExpiration(expirationTime);
         return JWT.create()
-                .withSubject(email)
+                .withClaim("seq", seq)
+                .withClaim("email", email)
                 .withExpiresAt(expires)
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
