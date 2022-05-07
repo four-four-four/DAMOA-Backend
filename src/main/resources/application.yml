@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: jpa,database,jwt
+    include: jpa,database,jwt,log
 
   devtools:
     restart:
@@ -11,7 +11,3 @@ spring:
 
 server:
   port: 8080
-
-logging.level:
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace

@@ -1,6 +1,7 @@
 application-database.yml
 application-jpa.yml
 application-jwt.yml
+application-log.yml
 
 HELP.md
 .gradle
