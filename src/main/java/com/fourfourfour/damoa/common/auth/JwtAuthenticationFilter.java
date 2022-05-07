@@ -64,17 +64,17 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
             JwtTokenUtil.handleError(token);
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
-            String email = decodedJWT.getSubject();
+            Long seq = decodedJWT.getClaim("seq").asLong();
 
-            if (email != null) {
-                Member member = memberRepository.findByEmail(email)
+            if (seq != null) {
+                Member member = memberRepository.findBySeq(seq)
                         .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_MEMBER));
 
                 if(member != null) {
                     PrincipalDetails customUserDetails = new PrincipalDetails(member);
                     customUserDetails.setAuthorities(Collections.singletonList(member.getRole()));
                     UsernamePasswordAuthenticationToken jwtAuthentication =
-                            new UsernamePasswordAuthenticationToken(email, null, customUserDetails.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(seq, null, customUserDetails.getAuthorities());
                     jwtAuthentication.setDetails(customUserDetails);
                     return jwtAuthentication;
                 }
