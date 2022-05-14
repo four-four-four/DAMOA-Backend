@@ -127,4 +127,20 @@ class MemberKeywordServiceTest {
         assertThat(findMemberKeyword.getKeyword().getSeq()).isEqualTo(savedKeyword1.getSeq());
         assertThat(findMemberKeyword.getKeyword().getName()).isEqualTo(savedKeyword1.getName());
     }
+
+    @Test
+    @DisplayName("회원 키워드 등록 - 새롭게 키워드 생성 후 등록")
+    void registerKeywordSuccessWhenCreateKeywordAndUse() {
+        // given
+        Member savedMember = memberService.register(registerDto1.toServiceDto());
+
+        // when
+        MemberKeyword savedMemberKeyword = memberKeywordService.register(keyword1.getName(), savedMember.getSeq());
+        MemberKeyword findMemberKeyword = memberKeywordRepository.findByMemberAndKeyword(savedMemberKeyword.getMember(), savedMemberKeyword.getKeyword())
+                .orElse(null);
+
+        // then
+        assertThat(findMemberKeyword.getMember().getSeq()).isEqualTo(savedMember.getSeq());
+        assertThat(findMemberKeyword.getKeyword().getName()).isEqualTo(keyword1.getName());
+    }
 }
