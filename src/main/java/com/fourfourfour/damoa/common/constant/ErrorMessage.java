@@ -7,33 +7,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class ErrorMessage {
 
-    public static String AUTHENTICATION_MEMBER;
+    static public String AUTHENTICATION_MEMBER;
 
-    public static String PATTERN;
+    static public String PATTERN;
 
-    public static String PATTERN_MEMBER_EMAIL;
+    static public String PATTERN_MEMBER_EMAIL;
 
-    public static String PATTERN_MEMBER_PASSWORD;
+    static public String PATTERN_MEMBER_PASSWORD;
 
-    public static String PATTERN_MEMBER_NICKNAME;
+    static public String PATTERN_MEMBER_NICKNAME;
 
-    public static String PATTERN_MEMBER_TERM;
+    static public String PATTERN_MEMBER_TERM;
 
-    public static String NULL_MEMBER;
+    static public String NULL_MEMBER;
 
-    public static String NULL_MEMBER_EMAIL;
+    static public String NULL_MEMBER_EMAIL;
 
-    public static String NULL_NOTICE;
+    static public String NULL_NOTICE;
 
-    public static String BLANK_NOTICE_TITLE;
+    static public String BLANK_NOTICE_TITLE;
 
-    public static String BLANK_NOTICE_CONTENT;
+    static public String BLANK_NOTICE_CONTENT;
 
-    public static String BLANK_NOTICE_COMMENT;
+    static public String BLANK_NOTICE_COMMENT;
 
-    public static String FORBIDDEN;
+    static public String FORBIDDEN;
 
-    public static String ERROR;
+    static public String ERROR;
+    
+    static public String BANNED_KEYWORD;
 
     @Autowired
     public ErrorMessage(MessageSource messageSource) {
@@ -51,5 +53,6 @@ public class ErrorMessage {
         BLANK_NOTICE_COMMENT = messageSource.getMessage("blank.notice.comment", null, null);
         FORBIDDEN = messageSource.getMessage("forbidden", null, null);
         ERROR = messageSource.getMessage("error", null, null);
+        BANNED_KEYWORD = messageSource.getMessage("banned.keyword", null, null);
     }
 }
