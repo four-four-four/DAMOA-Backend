@@ -58,4 +58,16 @@ class BannedKeywordRepositoryTest {
         // then
         assertThat(exists).isTrue();
     }
+
+    @Test
+    @DisplayName("차단 키워드 확인 - 차단되지 않은 경우")
+    void checkBannedKeywordWhenNotBanned() {
+        // given
+
+        // when
+        boolean exists = bannedKeywordRepository.existsByName("noName");
+
+        // then
+        assertThat(exists).isFalse();
+    }
 }
