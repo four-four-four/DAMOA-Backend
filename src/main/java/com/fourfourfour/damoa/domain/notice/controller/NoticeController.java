@@ -24,13 +24,11 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
-    private final AuthenticationUtil authenticationUtil;
-
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @ResponseStatus(CREATED)
     @PostMapping
     public BaseResponseDto<Void> noticeRegister(@Valid @RequestBody NoticeRequestDto.RegisterDto registerDto) {
-        Long memberSeq = authenticationUtil.getMemberSeq();
+        Long memberSeq = AuthenticationUtil.getMemberSeq();
 
         noticeService.register(registerDto.toServiceDto(), memberSeq);
 

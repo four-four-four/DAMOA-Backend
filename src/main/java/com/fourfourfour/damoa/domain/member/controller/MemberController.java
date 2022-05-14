@@ -28,8 +28,6 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/api/v1/members")
 public class MemberController {
 
-    private final AuthenticationUtil authenticationUtil;
-
     private final MemberService memberService;
 
     private final KeywordService keywordService;
@@ -102,7 +100,7 @@ public class MemberController {
     @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
     @GetMapping("/{memberSeq}/keywords")
     public ResponseEntity<BaseResponseDto<List<KeywordDto.BasicDto>>> memberKeywordList(@PathVariable("memberSeq") Long memberSeq) {
-        authenticationUtil.verifyMember(memberSeq);
+        AuthenticationUtil.verifyMember(memberSeq);
 
         List<KeywordDto.BasicDto> keywordBasicList = keywordService.keywordBasicList(memberSeq);
         HttpStatus status = keywordBasicList == null ? NO_CONTENT : OK;
