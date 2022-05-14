@@ -5,6 +5,7 @@ import com.fourfourfour.damoa.domain.keyword.entity.Keyword;
 import com.fourfourfour.damoa.domain.keyword.repository.KeywordRepository;
 import com.fourfourfour.damoa.domain.keyword.repository.MemberKeywordRepository;
 import com.fourfourfour.damoa.domain.member.controller.dto.MemberRequestDto;
+import com.fourfourfour.damoa.domain.member.entity.Member;
 import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import com.fourfourfour.damoa.domain.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,6 +84,24 @@ class MemberKeywordServiceTest {
 
         // then
         assertThatThrownBy(() -> memberKeywordService.register(savedKeyword1.getName(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.NULL_MEMBER);
+    }
+
+    @Test
+    @DisplayName("회원 키워드 등록 - 예외 발생 : 삭제된 회원임")
+    void registerKeywordFailWhenDeletedMember() {
+        // given
+        Member savedMember = memberService.register(registerDto1.toServiceDto());
+        savedMember.delete();
+
+        Keyword savedKeyword1 = keywordRepository.save(keyword1);
+        em.flush();
+        em.clear();
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberKeywordService.register(savedKeyword1.getName(), savedMember.getSeq()))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.NULL_MEMBER);
     }
