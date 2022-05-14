@@ -102,4 +102,21 @@ class KeywordRepositoryTest {
         // then
         assertThat(findKeyword).isNull();
     }
+
+    @Test
+    @DisplayName("이름으로 키워드 엔티티 조회 - 데이터가 있지만 삭제 처리된 경우")
+    void findByNameWhenDeleted() {
+        // given
+        keyword1.delete();
+        Keyword deletedKeyword1 = keywordRepository.save(keyword1);
+        em.flush();
+        em.clear();
+
+        // when
+        Keyword findKeyword1 = keywordRepository.findByName(deletedKeyword1.getName())
+                .orElse(null);
+
+        // then
+        assertThat(findKeyword1).isNull();
+    }
 }
