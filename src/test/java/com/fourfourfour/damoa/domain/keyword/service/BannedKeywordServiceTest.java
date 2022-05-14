@@ -67,4 +67,16 @@ class BannedKeywordServiceTest {
         // then
         assertThat(banned).isTrue();
     }
+
+    @Test
+    @DisplayName("차단 여부 확인 - 차단되지 않은 경우")
+    void checkBannedKeywordFalse() {
+        // given
+
+        // when
+        boolean banned = bannedKeywordService.isBanned(bannedKeyword1.getName());
+
+        // then
+        assertThat(banned).isFalse();
+    }
 }
