@@ -1,5 +1,6 @@
 package com.fourfourfour.damoa.domain.keyword.service;
 
+import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import com.fourfourfour.damoa.domain.keyword.entity.Keyword;
 import com.fourfourfour.damoa.domain.keyword.repository.KeywordRepository;
 import com.fourfourfour.damoa.domain.keyword.repository.MemberKeywordRepository;
@@ -7,12 +8,16 @@ import com.fourfourfour.damoa.domain.member.controller.dto.MemberRequestDto;
 import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import com.fourfourfour.damoa.domain.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -64,5 +69,21 @@ class MemberKeywordServiceTest {
                 .serviceTerm(true)
                 .privacyTerm(true)
                 .build();
+    }
+
+    @Test
+    @DisplayName("회원 키워드 등록 - 예외 발생 : DB에 회원 데이터가 없음")
+    void registerKeywordFailWhenNotExistsMember() {
+        // given
+        Keyword savedKeyword1 = keywordRepository.save(keyword1);
+        em.flush();
+        em.clear();
+
+        // when
+
+        // then
+        assertThatThrownBy(() -> memberKeywordService.register(savedKeyword1.getName(), 0L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(ErrorMessage.NULL_MEMBER);
     }
 }
