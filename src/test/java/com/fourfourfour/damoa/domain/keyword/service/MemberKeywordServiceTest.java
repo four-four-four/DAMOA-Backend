@@ -2,6 +2,7 @@ package com.fourfourfour.damoa.domain.keyword.service;
 
 import com.fourfourfour.damoa.common.constant.ErrorMessage;
 import com.fourfourfour.damoa.domain.keyword.entity.Keyword;
+import com.fourfourfour.damoa.domain.keyword.entity.MemberKeyword;
 import com.fourfourfour.damoa.domain.keyword.repository.KeywordRepository;
 import com.fourfourfour.damoa.domain.keyword.repository.MemberKeywordRepository;
 import com.fourfourfour.damoa.domain.member.controller.dto.MemberRequestDto;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
@@ -104,5 +106,25 @@ class MemberKeywordServiceTest {
         assertThatThrownBy(() -> memberKeywordService.register(savedKeyword1.getName(), savedMember.getSeq()))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(ErrorMessage.NULL_MEMBER);
+    }
+
+    @Test
+    @DisplayName("키워드 등록 - DB에 이미 있는 키워드를 사용")
+    void registerKeywordSuccessWhenUsingExistsKeyword() {
+        // given
+        Member savedMember = memberService.register(registerDto1.toServiceDto());
+        Keyword savedKeyword1 = keywordRepository.save(keyword1);
+        em.flush();
+        em.clear();
+
+        // when
+        MemberKeyword savedMemberKeyword = memberKeywordService.register(savedKeyword1.getName(), savedMember.getSeq());
+        MemberKeyword findMemberKeyword = memberKeywordRepository.findByMemberAndKeyword(savedMemberKeyword.getMember(), savedMemberKeyword.getKeyword())
+                .orElse(null);
+
+        // then
+        assertThat(findMemberKeyword.getMember().getSeq()).isEqualTo(savedMember.getSeq());
+        assertThat(findMemberKeyword.getKeyword().getSeq()).isEqualTo(savedKeyword1.getSeq());
+        assertThat(findMemberKeyword.getKeyword().getName()).isEqualTo(savedKeyword1.getName());
     }
 }
