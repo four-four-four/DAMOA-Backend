@@ -7,19 +7,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class Message {
 
-    public static String REGISTER_MEMBER;
+    static public String REGISTER_MEMBER;
 
-    public static String LOGIN;
+    static public String LOGIN;
 
-    public static String DUPLICATE_MEMBER_EMAIL;
+    static public String DUPLICATE_MEMBER_EMAIL;
 
-    public static String DUPLICATE_MEMBER_NICKNAME;
+    static public String DUPLICATE_MEMBER_NICKNAME;
 
-    public static String USABLE_MEMBER_EMAIL;
+    static public String USABLE_MEMBER_EMAIL;
 
-    public static String USABLE_MEMBER_NICKNAME;
+    static public String USABLE_MEMBER_NICKNAME;
 
-    public static String REGISTER_NOTICE;
+    static public String REGISTER_NOTICE;
 
     @Autowired
     public Message(MessageSource messageSource) {
