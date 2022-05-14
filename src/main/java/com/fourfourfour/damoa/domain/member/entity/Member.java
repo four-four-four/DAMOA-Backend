@@ -103,6 +103,10 @@ public class Member extends BaseLastModifiedEntity {
         this.isDeleted = false;
     }
 
+    public void delete() {
+        this.isDeleted = true;
+    }
+
     public enum Gender {
 
         MALE("남성"), FEMALE("여성"), ETC("기타");

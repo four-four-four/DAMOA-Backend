@@ -55,4 +55,8 @@ public class Keyword extends BaseCreatedEntity {
                 .name(name)
                 .build();
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

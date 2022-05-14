@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class KeywordServiceImpl implements KeywordService {
 
     private final MemberKeywordRepository memberKeywordRepository;
