@@ -89,4 +89,17 @@ class KeywordRepositoryTest {
         assertThat(findKeyword1.getSeq()).isEqualTo(savedKeyword1.getSeq());
         assertThat(findKeyword1.getName()).isEqualTo(savedKeyword1.getName());
     }
+
+    @Test
+    @DisplayName("이름으로 키워드 엔티티 조회 - 데이터가 없는 경우")
+    void findByNameWhenNotExists() {
+        // given
+
+        // when
+        Keyword findKeyword = keywordRepository.findByName("noName")
+                .orElse(null);
+
+        // then
+        assertThat(findKeyword).isNull();
+    }
 }
