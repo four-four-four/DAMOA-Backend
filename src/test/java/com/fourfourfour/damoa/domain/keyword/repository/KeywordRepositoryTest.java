@@ -4,12 +4,16 @@ import com.fourfourfour.damoa.domain.keyword.entity.Keyword;
 import com.fourfourfour.damoa.domain.member.entity.Member;
 import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -67,5 +71,22 @@ class KeywordRepositoryTest {
         keyword2 = Keyword.builder()
                 .name("키워드2")
                 .build();
+    }
+
+    @Test
+    @DisplayName("이름으로 키워드 엔티티 조회 - 데이터가 있는 경우")
+    void findByName() {
+        // given
+        Keyword savedKeyword1 = keywordRepository.save(keyword1);
+        em.flush();
+        em.clear();
+
+        // when
+        Keyword findKeyword1 = keywordRepository.findByName(savedKeyword1.getName())
+                .orElse(null);
+
+        // then
+        assertThat(findKeyword1.getSeq()).isEqualTo(savedKeyword1.getSeq());
+        assertThat(findKeyword1.getName()).isEqualTo(savedKeyword1.getName());
     }
 }
