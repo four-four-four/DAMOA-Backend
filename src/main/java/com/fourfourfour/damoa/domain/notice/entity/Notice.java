@@ -54,4 +54,8 @@ public class Notice extends BaseLastModifiedEntity {
         this.isDeleted = false;
         this.writer = writer;
     }
+
+    public void increaseView() {
+        this.views++;
+    }
 }
