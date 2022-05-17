@@ -63,6 +63,26 @@ public class NoticeServiceImpl implements NoticeService{
                 .build();
     }
 
+    @Override
+    @Transactional
+    public NoticeResponseDto.Detail getDetail(Long noticeSeq) {
+        Notice findNotice = noticeRepository.findBySeq(noticeSeq)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_NOTICE));
+
+        findNotice.increaseView();
+
+        Member writer = findNotice.getWriter();
+
+        return NoticeResponseDto.Detail.builder()
+                .noticeSeq(findNotice.getSeq())
+                .content(findNotice.getContent())
+                .writer(writer.getNickname())
+                .title(findNotice.getTitle())
+                .createdDate(findNotice.getCreatedDate().toLocalDate())
+                .views(findNotice.getViews())
+                .build();
+    }
+
     @Transactional
     @Override
     public void deleteAll() {
