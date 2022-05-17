@@ -187,4 +187,12 @@ class NoticeServiceImplTest {
         assertThat(findNotice.getCreatedDate()).isEqualTo(savedNotice.getCreatedDate().toLocalDate());
         assertThat(findNotice.getWriter()).isEqualTo(savedNotice.getWriter().getNickname());
     }
+
+    @Test
+    @DisplayName("공지사항 상세페이지 조회 - 예외 처리 : 공지사항 데이터가 존재하지 않을 때")
+    public void findFailWhenNoticeNull() {
+        assertThatThrownBy(() -> noticeService.getDetail(100L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NULL_NOTICE);
+    }
 }
