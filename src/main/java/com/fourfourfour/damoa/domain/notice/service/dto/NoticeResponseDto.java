@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -48,6 +49,32 @@ public class NoticeResponseDto {
             this.currentPage = currentPage;
             this.totalPage = totalPage;
             this.noticeForPage = noticeForPage;
+        }
+    }
+
+    @Getter
+    @ToString(of = {"noticeSeq", "title", "content", "views", "createdDate", "writer"})
+    public static class Detail {
+        private final Long noticeSeq;
+
+        private final String title;
+
+        private final String content;
+
+        private final Integer views;
+
+        private final LocalDate createdDate;
+
+        private final String writer;
+
+        @Builder
+        public Detail(Long noticeSeq, String title, String content, Integer views, LocalDate createdDate, String writer) {
+            this.noticeSeq = noticeSeq;
+            this.title = title;
+            this.content = content;
+            this.views = views;
+            this.createdDate = createdDate;
+            this.writer = writer;
         }
     }
 }
