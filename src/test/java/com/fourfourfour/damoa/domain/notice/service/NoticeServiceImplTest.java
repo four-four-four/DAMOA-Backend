@@ -191,7 +191,7 @@ class NoticeServiceImplTest {
     @Test
     @DisplayName("공지사항 상세페이지 조회 - 예외 처리 : 공지사항 데이터가 존재하지 않을 때")
     public void findFailWhenNoticeNull() {
-        assertThatThrownBy(() -> noticeService.getDetail(100L))
+        assertThatThrownBy(() -> noticeService.getDetail(0L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_NOTICE);
     }
