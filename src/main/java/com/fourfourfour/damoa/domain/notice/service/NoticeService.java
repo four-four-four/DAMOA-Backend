@@ -11,5 +11,7 @@ public interface NoticeService {
 
     NoticeResponseDto.NoticeListPage getPage(Pageable pageable);
 
+    NoticeResponseDto.Detail getDetail(Long noticeSeq);
+
     void deleteAll();
 }

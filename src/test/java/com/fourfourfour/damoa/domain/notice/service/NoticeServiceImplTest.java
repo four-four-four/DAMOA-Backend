@@ -167,4 +167,32 @@ class NoticeServiceImplTest {
         assertThat(noticeForPage3.getWriter()).isEqualTo(savedAdmin.getNickname());
         assertThat(noticeForPage3.getViews()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("공지사항 상세페이지 조회 - 성공")
+    public void findNoticeDetailSuccess() {
+        // 회원가입
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
+        memberService.register(memberRegisterDto1.toServiceDto());
+
+        // 공지사항 등록
+        Notice savedNotice = noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
+
+        // 공지사항 상세페이지 조회 검증
+        NoticeResponseDto.Detail findNotice = noticeService.getDetail(savedNotice.getSeq());
+        assertThat(findNotice.getNoticeSeq()).isEqualTo(savedNotice.getSeq());
+        assertThat(findNotice.getTitle()).isEqualTo(savedNotice.getTitle());
+        assertThat(findNotice.getContent()).isEqualTo(savedNotice.getContent());
+        assertThat(findNotice.getViews()).isEqualTo(1);
+        assertThat(findNotice.getCreatedDate()).isEqualTo(savedNotice.getCreatedDate().toLocalDate());
+        assertThat(findNotice.getWriter()).isEqualTo(savedNotice.getWriter().getNickname());
+    }
+
+    @Test
+    @DisplayName("공지사항 상세페이지 조회 - 예외 처리 : 공지사항 데이터가 존재하지 않을 때")
+    public void findFailWhenNoticeNull() {
+        assertThatThrownBy(() -> noticeService.getDetail(0L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NULL_NOTICE);
+    }
 }

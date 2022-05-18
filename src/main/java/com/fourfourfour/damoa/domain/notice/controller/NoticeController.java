@@ -45,4 +45,16 @@ public class NoticeController {
                 .data(noticeListPage)
                 .build();
     }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_MEMBER')")
+    @ResponseStatus(OK)
+    @GetMapping("/{noticeSeq}")
+    public BaseResponseDto<NoticeResponseDto.Detail> viewDetail(@PathVariable Long noticeSeq) {
+
+        NoticeResponseDto.Detail noticeDetail = noticeService.getDetail(noticeSeq);
+
+        return BaseResponseDto.<NoticeResponseDto.Detail>builder()
+                .data(noticeDetail)
+                .build();
+    }
 }
