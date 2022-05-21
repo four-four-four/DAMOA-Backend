@@ -2,6 +2,8 @@ FROM amazoncorretto:11
 
 EXPOSE 8080
 
+ENV TZ Asia/Seoul
+
 ARG JAR_FILE=build/libs/damoa-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
 
