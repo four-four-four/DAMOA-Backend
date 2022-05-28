@@ -4,6 +4,7 @@ import com.fourfourfour.damoa.domain.member.entity.Member;
 import com.fourfourfour.damoa.domain.member.repository.MemberRepository;
 import com.fourfourfour.damoa.domain.notice.entity.Notice;
 import com.fourfourfour.damoa.domain.notice.entity.NoticeComment;
+import com.fourfourfour.damoa.domain.notice.service.dto.NoticeCommentDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -112,5 +115,54 @@ public class NoticeCommentRepositoryTest {
         assertThat(noticeComment.getNotice().getSeq()).isEqualTo(savedNoticeComment.get().getNotice().getSeq());
         assertThat(noticeComment.getContent()).isEqualTo(savedNoticeComment.get().getContent());
         assertThat(noticeComment.isDeleted()).isEqualTo(savedNoticeComment.get().isDeleted());
+    }
+
+    @Test
+    @DisplayName("공지사항 댓글 조회 : 성공")
+    public void findNoticeCommentSuccess() throws InterruptedException {
+        // 관리자와 사용자 회원가입
+        memberRepository.save(admin1);
+        memberRepository.save(member1);
+
+        noticeRepository.save(notice1);
+
+        // 공지사항 댓글 엔티티 저장
+        NoticeComment noticeComment1 = NoticeComment.builder()
+                .notice(notice1)
+                .writer(member1)
+                .content("DAMOA 공지사항 댓글 1")
+                .build();
+
+        NoticeComment noticeComment2 = NoticeComment.builder()
+                .notice(notice1)
+                .writer(member1)
+                .content("DAMOA 공지사항 댓글 2")
+                .build();
+
+        noticeCommentRepository.save(noticeComment1);
+        Thread.sleep(1000);
+        noticeCommentRepository.save(noticeComment2);
+
+        em.flush();
+        em.clear();
+
+        List<NoticeCommentDto.Detail> findNoticeComment = noticeCommentRepository.findCommentsByNoticeSeq(notice1.getSeq())
+                .orElse(null);
+        assertThat(findNoticeComment).isNotNull();
+        assertThat(findNoticeComment.size()).isEqualTo(2);
+
+        NoticeCommentDto.Detail comment1 = findNoticeComment.get(0);
+        assertThat(comment1.getCommentSeq()).isEqualTo(noticeComment1.getSeq());
+        assertThat(comment1.getContent()).isEqualTo(noticeComment1.getContent());
+        assertThat(comment1.getCreatedDate()).isEqualTo(noticeComment1.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(comment1.getMemberSeq()).isEqualTo(noticeComment1.getWriter().getSeq());
+        assertThat(comment1.getWriter()).isEqualTo(noticeComment1.getWriter().getNickname());
+
+        NoticeCommentDto.Detail comment2 = findNoticeComment.get(1);
+        assertThat(comment2.getCommentSeq()).isEqualTo(noticeComment2.getSeq());
+        assertThat(comment2.getContent()).isEqualTo(noticeComment2.getContent());
+        assertThat(comment2.getCreatedDate()).isEqualTo(noticeComment2.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(comment2.getMemberSeq()).isEqualTo(noticeComment2.getWriter().getSeq());
+        assertThat(comment2.getWriter()).isEqualTo(noticeComment2.getWriter().getNickname());
     }
 }
