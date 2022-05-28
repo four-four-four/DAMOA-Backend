@@ -9,7 +9,7 @@ public interface NoticeCommentService {
 
     NoticeComment register(NoticeCommentDto.RegisterDto registerDto, Long memberSeq);
 
-    List<NoticeCommentDto.Detail> getDetail(Long noticeSeq);
+    List<NoticeCommentDto.Detail> getComments(Long noticeSeq);
 
     void deleteAll();
 }

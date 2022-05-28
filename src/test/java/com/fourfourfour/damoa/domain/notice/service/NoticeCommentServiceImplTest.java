@@ -153,7 +153,7 @@ public class NoticeCommentServiceImplTest {
         Thread.sleep(1000);
         NoticeComment savedComment2 = noticeCommentService.register(noticeCommentRegisterDto2.toServiceDto(savedNotice.getSeq()), savedMember.getSeq());
 
-        List<NoticeCommentDto.Detail> noticeComments = noticeCommentService.getDetail(savedNotice.getSeq());
+        List<NoticeCommentDto.Detail> noticeComments = noticeCommentService.getComments(savedNotice.getSeq());
         assertThat(noticeComments.size()).isEqualTo(2);
 
         NoticeCommentDto.Detail comment1 = noticeComments.get(0);
@@ -174,7 +174,7 @@ public class NoticeCommentServiceImplTest {
     @Test
     @DisplayName("공지사항 댓글 조회 - 예외 처리 : 공지사항 데이터 없을 때")
     public void viewNoticeCommentFailWhenNoticeNull() {
-        assertThatThrownBy(() -> noticeCommentService.getDetail(0L))
+        assertThatThrownBy(() -> noticeCommentService.getComments(0L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_NOTICE);
     }

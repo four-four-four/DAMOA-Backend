@@ -39,7 +39,7 @@ public class NoticeCommentController {
     @ResponseStatus(OK)
     @GetMapping
     public BaseResponseDto<List<NoticeCommentDto.Detail>> view(@PathVariable Long noticeSeq) {
-        List<NoticeCommentDto.Detail> comments = noticeCommentService.getDetail(noticeSeq);
+        List<NoticeCommentDto.Detail> comments = noticeCommentService.getComments(noticeSeq);
 
         return BaseResponseDto.<List<NoticeCommentDto.Detail>>builder()
                 .data(comments)

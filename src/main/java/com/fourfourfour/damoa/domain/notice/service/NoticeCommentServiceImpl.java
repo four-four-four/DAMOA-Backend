@@ -43,7 +43,7 @@ public class NoticeCommentServiceImpl implements NoticeCommentService {
     }
 
     @Override
-    public List<NoticeCommentDto.Detail> getDetail(Long noticeSeq) {
+    public List<NoticeCommentDto.Detail> getComments(Long noticeSeq) {
         noticeRepository.findBySeq(noticeSeq)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_NOTICE));
 
