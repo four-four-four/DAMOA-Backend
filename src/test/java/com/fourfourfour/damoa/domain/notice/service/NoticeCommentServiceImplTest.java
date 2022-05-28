@@ -171,4 +171,11 @@ public class NoticeCommentServiceImplTest {
         assertThat(comment2.getCreatedDate()).isEqualTo(savedComment2.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
+    @Test
+    @DisplayName("공지사항 댓글 조회 - 예외 처리 : 공지사항 데이터 없을 때")
+    public void viewNoticeCommentFailWhenNoticeNull() {
+        assertThatThrownBy(() -> noticeCommentService.getDetail(0L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NULL_NOTICE);
+    }
 }
