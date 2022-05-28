@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface NoticeCommentRepository extends JpaRepository<NoticeComment, Long> {
+public interface NoticeCommentRepository extends JpaRepository<NoticeComment, Long>, NoticeCommentRepositoryCustom {
     @Query("SELECT nc FROM NoticeComment nc WHERE nc.seq = :seq AND nc.isDeleted = FALSE")
     Optional<NoticeComment> findBySeq(@Param("seq") Long seq);
 }
