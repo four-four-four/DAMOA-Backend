@@ -11,4 +11,6 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeRep
 
     @Query("SELECT n FROM Notice n WHERE n.seq = :seq AND n.isDeleted = FALSE")
     Optional<Notice> findBySeq(@Param("seq") Long seq);
+
+    boolean existsBySeq(Long seq);
 }
