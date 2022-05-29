@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -38,6 +41,31 @@ public class NoticeCommentServiceImpl implements NoticeCommentService {
                 .build();
 
         return noticeCommentRepository.save(newComment);
+    }
+
+    @Override
+    public List<NoticeCommentDto.Detail> getComments(Long noticeSeq) {
+        Notice findNotice = noticeRepository.findBySeq(noticeSeq)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_NOTICE));
+
+        List<NoticeCommentDto.Detail> noticeComments = new ArrayList<>();
+        List<NoticeComment> comments = findNotice.getComments();
+
+        for (NoticeComment comment : comments) {
+            if (!comment.isDeleted()) {
+                noticeComments.add(
+                        NoticeCommentDto.Detail.builder()
+                                .commentSeq(comment.getSeq())
+                                .content(comment.getContent())
+                                .createdDate(comment.getCreatedDate())
+                                .memberSeq(comment.getWriter().getSeq())
+                                .writer(comment.getWriter().getNickname())
+                                .build()
+                );
+            }
+        }
+
+        return noticeComments;
     }
 
     @Override

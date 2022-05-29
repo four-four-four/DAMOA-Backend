@@ -9,6 +9,7 @@ import com.fourfourfour.damoa.domain.notice.controller.dto.NoticeRequestDto;
 import com.fourfourfour.damoa.domain.notice.entity.Notice;
 import com.fourfourfour.damoa.domain.notice.entity.NoticeComment;
 import com.fourfourfour.damoa.domain.notice.repository.NoticeCommentRepository;
+import com.fourfourfour.damoa.domain.notice.service.dto.NoticeCommentDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -126,6 +129,52 @@ public class NoticeCommentServiceImplTest {
                 .build();
 
         assertThatThrownBy(() -> noticeCommentService.register(noticeCommentRegisterDto.toServiceDto(0L), savedMember.getSeq()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage(ErrorMessage.NULL_NOTICE);
+    }
+
+    @Test
+    @DisplayName("공지사항 댓글 조회 - 성공")
+    public void viewNoticeCommentSuccess() throws InterruptedException {
+        Member savedAdmin = memberService.register(adminRegisterDto1.toServiceDto());
+        Member savedMember = memberService.register(memberRegisterDto1.toServiceDto());
+
+        Notice savedNotice = noticeService.register(noticeRegisterDto1.toServiceDto(), savedAdmin.getSeq());
+
+        NoticeCommentRequestDto.RegisterDto noticeCommentRegisterDto1 = NoticeCommentRequestDto.RegisterDto.builder()
+                .content("공지사항 댓글 1")
+                .build();
+
+        NoticeCommentRequestDto.RegisterDto noticeCommentRegisterDto2 = NoticeCommentRequestDto.RegisterDto.builder()
+                .content("공지사항 댓글 2")
+                .build();
+
+        NoticeComment savedComment1 = noticeCommentService.register(noticeCommentRegisterDto1.toServiceDto(savedNotice.getSeq()), savedMember.getSeq());
+        Thread.sleep(1000);
+        NoticeComment savedComment2 = noticeCommentService.register(noticeCommentRegisterDto2.toServiceDto(savedNotice.getSeq()), savedMember.getSeq());
+
+        List<NoticeCommentDto.Detail> noticeComments = noticeCommentService.getComments(savedNotice.getSeq());
+        assertThat(noticeComments.size()).isEqualTo(2);
+
+        NoticeCommentDto.Detail comment1 = noticeComments.get(0);
+        assertThat(comment1.getCommentSeq()).isEqualTo(savedComment1.getSeq());
+        assertThat(comment1.getWriter()).isEqualTo(savedComment1.getWriter().getNickname());
+        assertThat(comment1.getMemberSeq()).isEqualTo(savedComment1.getWriter().getSeq());
+        assertThat(comment1.getContent()).isEqualTo(savedComment1.getContent());
+        assertThat(comment1.getCreatedDate()).isEqualTo(savedComment1.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        NoticeCommentDto.Detail comment2 = noticeComments.get(1);
+        assertThat(comment2.getCommentSeq()).isEqualTo(savedComment2.getSeq());
+        assertThat(comment2.getWriter()).isEqualTo(savedComment2.getWriter().getNickname());
+        assertThat(comment2.getMemberSeq()).isEqualTo(savedComment2.getWriter().getSeq());
+        assertThat(comment2.getContent()).isEqualTo(savedComment2.getContent());
+        assertThat(comment2.getCreatedDate()).isEqualTo(savedComment2.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+    }
+
+    @Test
+    @DisplayName("공지사항 댓글 조회 - 예외 처리 : 공지사항 데이터 없을 때")
+    public void viewNoticeCommentFailWhenNoticeNull() {
+        assertThatThrownBy(() -> noticeCommentService.getComments(0L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage(ErrorMessage.NULL_NOTICE);
     }
