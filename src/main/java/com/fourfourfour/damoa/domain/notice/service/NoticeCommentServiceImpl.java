@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,11 +45,31 @@ public class NoticeCommentServiceImpl implements NoticeCommentService {
 
     @Override
     public List<NoticeCommentDto.Detail> getComments(Long noticeSeq) {
-        noticeRepository.findBySeq(noticeSeq)
-                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NULL_NOTICE));
+        boolean hasNotice = noticeRepository.existsBySeq(noticeSeq);
 
-        List<NoticeCommentDto.Detail> noticeComments = noticeCommentRepository.findCommentsByNoticeSeq(noticeSeq)
-                .orElse(null);
+        List<NoticeCommentDto.Detail> noticeComments = new ArrayList<>();
+
+        if (!hasNotice) {
+            throw new IllegalArgumentException(ErrorMessage.NULL_NOTICE);
+        }
+        else {
+            Notice findNotice = noticeRepository.findBySeq(noticeSeq).get();
+            List<NoticeComment> comments = findNotice.getComments();
+
+            for (NoticeComment comment : comments) {
+                if (!comment.isDeleted()) {
+                    noticeComments.add(
+                            NoticeCommentDto.Detail.builder()
+                                    .commentSeq(comment.getSeq())
+                                    .content(comment.getContent())
+                                    .createdDate(comment.getCreatedDate())
+                                    .memberSeq(comment.getWriter().getSeq())
+                                    .writer(comment.getWriter().getNickname())
+                                    .build()
+                    );
+                }
+            }
+        }
 
         return noticeComments;
     }
