@@ -28,7 +28,10 @@ public class NoticeCommentRepositoryImpl implements NoticeCommentRepositoryCusto
                         noticeComment.writer.nickname
                 ))
                 .from(noticeComment)
-                .where(noticeComment.notice.seq.eq(noticeSeq).and(noticeComment.isDeleted.isFalse()))
+                .where(
+                        noticeComment.notice.seq.eq(noticeSeq),
+                        noticeComment.isDeleted.isFalse()
+                )
                 .orderBy(
                         noticeComment.createdDate.asc()
                 ).fetch();
