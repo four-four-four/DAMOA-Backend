@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,6 +152,9 @@ public class NoticeCommentServiceImplTest {
         Thread.sleep(1000);
         NoticeComment savedComment2 = noticeCommentService.register(noticeCommentRegisterDto2.toServiceDto(savedNotice.getSeq()), savedMember.getSeq());
 
+        em.flush();
+        em.clear();
+
         List<NoticeCommentDto.Detail> noticeComments = noticeCommentService.getComments(savedNotice.getSeq());
         assertThat(noticeComments.size()).isEqualTo(2);
 
@@ -161,14 +163,12 @@ public class NoticeCommentServiceImplTest {
         assertThat(comment1.getWriter()).isEqualTo(savedComment1.getWriter().getNickname());
         assertThat(comment1.getMemberSeq()).isEqualTo(savedComment1.getWriter().getSeq());
         assertThat(comment1.getContent()).isEqualTo(savedComment1.getContent());
-        assertThat(comment1.getCreatedDate()).isEqualTo(savedComment1.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         NoticeCommentDto.Detail comment2 = noticeComments.get(1);
         assertThat(comment2.getCommentSeq()).isEqualTo(savedComment2.getSeq());
         assertThat(comment2.getWriter()).isEqualTo(savedComment2.getWriter().getNickname());
         assertThat(comment2.getMemberSeq()).isEqualTo(savedComment2.getWriter().getSeq());
         assertThat(comment2.getContent()).isEqualTo(savedComment2.getContent());
-        assertThat(comment2.getCreatedDate()).isEqualTo(savedComment2.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @Test
