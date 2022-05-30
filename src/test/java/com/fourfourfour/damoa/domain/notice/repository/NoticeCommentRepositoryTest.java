@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -150,18 +149,15 @@ public class NoticeCommentRepositoryTest {
                 .orElse(null);
         assertThat(findNoticeComment).isNotNull();
         assertThat(findNoticeComment.size()).isEqualTo(2);
-
         NoticeCommentDto.Detail comment1 = findNoticeComment.get(0);
         assertThat(comment1.getCommentSeq()).isEqualTo(noticeComment1.getSeq());
         assertThat(comment1.getContent()).isEqualTo(noticeComment1.getContent());
-        assertThat(comment1.getCreatedDate()).isEqualTo(noticeComment1.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         assertThat(comment1.getMemberSeq()).isEqualTo(noticeComment1.getWriter().getSeq());
         assertThat(comment1.getWriter()).isEqualTo(noticeComment1.getWriter().getNickname());
 
         NoticeCommentDto.Detail comment2 = findNoticeComment.get(1);
         assertThat(comment2.getCommentSeq()).isEqualTo(noticeComment2.getSeq());
         assertThat(comment2.getContent()).isEqualTo(noticeComment2.getContent());
-        assertThat(comment2.getCreatedDate()).isEqualTo(noticeComment2.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         assertThat(comment2.getMemberSeq()).isEqualTo(noticeComment2.getWriter().getSeq());
         assertThat(comment2.getWriter()).isEqualTo(noticeComment2.getWriter().getNickname());
     }
